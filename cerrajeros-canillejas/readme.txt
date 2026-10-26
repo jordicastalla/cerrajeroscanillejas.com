@@ -2,7 +2,7 @@
 Requires at least: 6.6
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 1.2.0
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -28,12 +28,13 @@ secciones 02, 03 y 04 de la portada. Se abre al pasar el ratón o con el botón
 de flecha (teclado: Intro / Espacio; Escape lo cierra) y en móvil aparece
 desplegado dentro del menú.
 
-Efecto «rodar cilindro»: en pantallas de 1024 px o más, al pasar de una
-diapositiva a otra las secciones giran como las caras de un tambor. Es una
-animación CSS ligada al desplazamiento (animation-timeline: view()): el scroll
-sigue siendo el nativo del navegador, una diapositiva en reposo queda plana, y
-no se aplica con «reducir movimiento», en móvil ni en navegadores sin soporte
-(en esos casos las secciones se desplazan de forma normal).
+Efecto «rodar cilindro»: en pantallas de 900 px de ancho o más, al pasar de una
+diapositiva a otra las secciones giran como las caras de un tambor. Lo calcula
+assets/js/theme.js a partir de la posición del scroll (no intercepta la rueda, el
+teclado ni el tacto) con APIs estándar que también tienen Firefox y Safari (probado
+en Chromium). Una diapositiva en reposo queda plana. No se aplica en móvil, en el editor ni si el
+sistema tiene activado «reducir movimiento» / «mostrar animaciones: no» (en ese
+caso las secciones se desplazan de forma normal).
 
 == Instalación ==
 
@@ -160,6 +161,10 @@ Logotipo e iconos: derivados del logotipo facilitado por el cliente.
 Diseño y desarrollo: Diània — https://www.diania.dev/
 
 == Changelog ==
+
+= 1.3.0 =
+* «Rodar cilindro» pasa de CSS (animation-timeline, sin soporte por defecto en Firefox) a
+  JavaScript ligero con APIs estándar, y ya no exige 680 px de alto (portátiles de 1366×768).
 
 = 1.2.0 =
 * «Quiénes Somos»: la historia de Raúl y Jesús en dos columnas, con «Cómo trabajamos» y las preguntas frecuentes debajo.

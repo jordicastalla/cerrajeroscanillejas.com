@@ -6,8 +6,10 @@
  *  - reveal-on-scroll for elements marked .cc-reveal (and slide titles),
  *  - the active state of the 01–07 index and header links,
  *  - hiding the mobile call bar while another call button is on screen,
+ *  - the "rodar cilindro" transition between front-page slides,
  *  - a decorative copper cursor ring for fine pointers.
- * It never intercepts wheel, touch or keyboard scrolling.
+ * It never intercepts wheel, touch or keyboard scrolling: it only reads the
+ * scroll position.
  */
 ( function () {
 	'use strict';
@@ -177,6 +179,106 @@
 		} );
 	}
 
+	/* Drum transition ("rodar cilindro") ---------------------------------- */
+	/*
+	 * The slides behave like the faces of a drum. The slide entering from
+	 * below pivots on its top edge with its bottom receding; the slide leaving
+	 * at the top pivots on its bottom edge with its top receding. Both share
+	 * the same edge, so they stay joined as the drum turns. Progress is the
+	 * distance an edge has travelled between the bottom of the viewport and
+	 * the bottom of the sticky header; a slide at rest gets no transform.
+	 */
+	function setupDrum() {
+		var slides = Array.prototype.slice.call( doc.querySelectorAll( '.cc-deck > .cc-slide' ) );
+
+		if ( slides.length < 2 || ! window.requestAnimationFrame ) {
+			return;
+		}
+
+		var query = window.matchMedia( '(min-width: 900px) and (prefers-reduced-motion: no-preference)' );
+		var header = doc.querySelector( '.cc-site-header' );
+		var maxAngle = 22;
+		var flat = 0.04;
+		var pending = false;
+		var enabled = false;
+
+		function clear( slide ) {
+			slide.style.transform = '';
+			slide.style.transformOrigin = '';
+			slide.style.opacity = '';
+		}
+
+		function update() {
+			pending = false;
+
+			var viewport = window.innerHeight || root.clientHeight;
+			var line = header ? Math.max( 0, header.getBoundingClientRect().bottom ) : 0;
+			var span = Math.max( 1, viewport - line );
+			var rects = slides.map( function ( slide ) {
+				return slide.getBoundingClientRect();
+			} );
+
+			slides.forEach( function ( slide, index ) {
+				var rect = rects[ index ];
+				var amount = 0;
+				var origin = '';
+
+				// One pixel of tolerance: an edge sitting on the header line or the
+				// bottom of the viewport is "at rest", not crossing.
+				if ( index > 0 && rect.top > line + 1 && rect.top < viewport - 1 ) {
+					amount = -( rect.top - line ) / span;
+					origin = '50% 0%';
+				} else if ( rect.bottom > line + 1 && rect.bottom < viewport - 1 ) {
+					amount = ( viewport - rect.bottom ) / span;
+					origin = '50% 100%';
+				}
+
+				var size = Math.min( 1, Math.abs( amount ) );
+
+				if ( size <= flat ) {
+					clear( slide );
+					return;
+				}
+
+				size = ( size - flat ) / ( 1 - flat );
+				slide.style.transformOrigin = origin;
+				slide.style.transform = 'perspective(1400px) rotateX(' + ( ( amount < 0 ? -1 : 1 ) * size * maxAngle ).toFixed( 2 ) + 'deg)';
+				slide.style.opacity = ( 1 - 0.65 * size ).toFixed( 3 );
+			} );
+		}
+
+		function request() {
+			if ( ! pending ) {
+				pending = true;
+				window.requestAnimationFrame( update );
+			}
+		}
+
+		function toggle() {
+			if ( query.matches && ! enabled ) {
+				enabled = true;
+				root.classList.add( 'cc-drum' );
+				window.addEventListener( 'scroll', request, { passive: true } );
+				window.addEventListener( 'resize', request, { passive: true } );
+				request();
+			} else if ( ! query.matches && enabled ) {
+				enabled = false;
+				root.classList.remove( 'cc-drum' );
+				window.removeEventListener( 'scroll', request );
+				window.removeEventListener( 'resize', request );
+				slides.forEach( clear );
+			}
+		}
+
+		if ( query.addEventListener ) {
+			query.addEventListener( 'change', toggle );
+		} else if ( query.addListener ) {
+			query.addListener( toggle );
+		}
+
+		toggle();
+	}
+
 	/* Cursor ring --------------------------------------------------------- */
 	function setupCursor() {
 		var finePointer = window.matchMedia( '(hover: hover) and (pointer: fine)' );
@@ -238,6 +340,7 @@
 		setupReveals();
 		setupActiveSlide();
 		setupMobileCall();
+		setupDrum();
 		setupCursor();
 	}
 
