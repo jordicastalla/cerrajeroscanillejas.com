@@ -312,6 +312,13 @@ function print_meta_description() {
 			biz( 'landmark' ),
 			biz( 'phone_display' )
 		);
+	} elseif ( is_home() && ! is_paged() ) {
+		// Informational wording on purpose: the blog must not compete with the
+		// front page for "cerrajeros en Canillejas" or the service queries.
+		$posts_page  = get_queried_object();
+		$description = ( $posts_page instanceof \WP_Post && has_excerpt( $posts_page ) )
+			? wp_strip_all_tags( get_the_excerpt( $posts_page ) )
+			: 'Artículos sobre cerraduras, bombines, cerrojos de seguridad y cierres metálicos.';
 	} elseif ( is_singular() ) {
 		$post = get_queried_object();
 		if ( $post instanceof \WP_Post && ( has_excerpt( $post ) || '' !== trim( $post->post_content ) ) ) {
@@ -326,3 +333,112 @@ function print_meta_description() {
 	}
 }
 add_action( 'wp_head', __NAMESPACE__ . '\\print_meta_description', 1 );
+
+/*
+ * Keyword cannibalisation.
+ *
+ * The front page is the only page meant to rank for the business and its three
+ * services (the service sections are anchors of that one URL). The blog should
+ * capture informational searches and pass relevance back through links. The
+ * rules below remove duplicate listings that would otherwise compete with the
+ * blog and the front page. They step aside when an SEO plugin is active, since
+ * those plugins expose the same settings.
+ */
+
+/**
+ * Whether the current archive is a thin duplicate of the blog listing:
+ * author archives (single-author site), date archives and tag archives.
+ *
+ * @return bool
+ */
+function is_duplicate_archive() {
+	$duplicate = is_author() || is_date() || is_tag();
+
+	/**
+	 * Filters whether the current archive gets noindex,follow.
+	 *
+	 * @param bool $duplicate Default: author, date and tag archives.
+	 */
+	return (bool) apply_filters( 'cerrajeros_canillejas_noindex_archive', $duplicate );
+}
+
+/**
+ * Adds noindex,follow to duplicate archives through the core robots API.
+ *
+ * @param array $robots Robots directives.
+ * @return array
+ */
+function robots_for_duplicate_archives( $robots ) {
+	if ( ! seo_plugin_active() && is_duplicate_archive() ) {
+		$robots['noindex'] = true;
+		$robots['follow']  = true;
+	}
+	return $robots;
+}
+add_filter( 'wp_robots', __NAMESPACE__ . '\\robots_for_duplicate_archives' );
+
+/**
+ * Keeps the core XML sitemap consistent with the noindex rules: no author
+ * sitemap and no tag sitemap.
+ *
+ * @param \WP_Sitemaps_Provider $provider Provider instance.
+ * @param string                $name     Provider name.
+ * @return \WP_Sitemaps_Provider|false
+ */
+function sitemap_providers( $provider, $name ) {
+	if ( 'users' === $name && ! seo_plugin_active() && apply_filters( 'cerrajeros_canillejas_noindex_authors', true ) ) {
+		return false;
+	}
+	return $provider;
+}
+add_filter( 'wp_sitemaps_add_provider', __NAMESPACE__ . '\\sitemap_providers', 10, 2 );
+
+/**
+ * Removes tags from the core sitemap.
+ *
+ * @param array $taxonomies Taxonomy objects keyed by name.
+ * @return array
+ */
+function sitemap_taxonomies( $taxonomies ) {
+	if ( ! seo_plugin_active() && apply_filters( 'cerrajeros_canillejas_noindex_tags', true ) ) {
+		unset( $taxonomies['post_tag'] );
+	}
+	return $taxonomies;
+}
+add_filter( 'wp_sitemaps_taxonomies', __NAMESPACE__ . '\\sitemap_taxonomies' );
+
+/**
+ * Self-referencing canonical for the blog listing and category archives,
+ * including their pagination. WordPress core only prints a canonical on
+ * single posts and pages.
+ */
+function print_listing_canonical() {
+	if ( seo_plugin_active() || is_duplicate_archive() ) {
+		return;
+	}
+
+	if ( is_home() && ! is_front_page() ) {
+		$base = blog_url();
+	} elseif ( is_category() || is_tax() ) {
+		$base = get_term_link( get_queried_object() );
+	} else {
+		return;
+	}
+
+	if ( is_wp_error( $base ) || '' === $base ) {
+		return;
+	}
+
+	$paged = (int) get_query_var( 'paged' );
+	$url   = $base;
+
+	if ( $paged > 1 ) {
+		global $wp_rewrite;
+		$url = $wp_rewrite->using_permalinks()
+			? user_trailingslashit( trailingslashit( $base ) . $wp_rewrite->pagination_base . '/' . $paged, 'paged' )
+			: add_query_arg( 'paged', $paged, $base );
+	}
+
+	printf( '<link rel="canonical" href="%s" />' . "\n", esc_url( $url ) );
+}
+add_action( 'wp_head', __NAMESPACE__ . '\\print_listing_canonical', 5 );

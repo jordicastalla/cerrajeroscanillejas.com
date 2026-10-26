@@ -104,6 +104,16 @@
 					}
 				}
 			} );
+			// "Servicios" stays highlighted while any of its sections is active.
+			Array.prototype.forEach.call(
+				doc.querySelectorAll( 'nav.cc-nav-primary .wp-block-navigation-submenu' ),
+				function ( submenu ) {
+					submenu.classList.toggle(
+						'is-active',
+						!! submenu.querySelector( '.wp-block-navigation__submenu-container .is-active' )
+					);
+				}
+			);
 			root.setAttribute( 'data-cc-slide', id );
 		}
 

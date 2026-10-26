@@ -321,6 +321,99 @@ nav.cc-nav-primary .is-active > .wp-block-navigation-item__content {
 	color: var(--cc-copper);
 }
 
+/* Services dropdown (core Submenu block): a dark technical index of the
+   three service slides, numbered 02–04 like the deck. */
+nav.cc-nav-primary .wp-block-navigation-submenu__toggle {
+	color: var(--cc-silver);
+	margin-left: 0.3rem;
+	padding: 0.25rem 0;
+}
+
+nav.cc-nav-primary .wp-block-navigation-submenu__toggle svg {
+	stroke: currentColor;
+	transition: transform 0.3s var(--cc-ease);
+}
+
+nav.cc-nav-primary .has-child:hover > .wp-block-navigation-submenu__toggle svg,
+nav.cc-nav-primary .has-child:focus-within > .wp-block-navigation-submenu__toggle svg,
+nav.cc-nav-primary .wp-block-navigation-submenu__toggle[aria-expanded="true"] svg {
+	transform: rotate(180deg);
+}
+
+nav.cc-nav-primary .has-child > .wp-block-navigation-submenu__toggle:hover {
+	color: var(--cc-copper);
+}
+
+/* The menu is right-justified, which makes core open submenus leftwards;
+   open this one under its label instead. */
+nav.cc-nav-primary .wp-block-navigation__container > .has-child > .wp-block-navigation__submenu-container {
+	left: -1.1rem !important;
+	right: auto !important;
+	top: calc(100% + 0.85rem) !important;
+}
+
+/* Invisible bridge so the pointer can travel from the label to the panel. */
+nav.cc-nav-primary .wp-block-navigation__container > .has-child > .wp-block-navigation__submenu-container::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 100%;
+	height: 1rem;
+}
+
+nav.cc-nav-primary .wp-block-navigation__submenu-container {
+	min-width: 17rem !important;
+	padding: 0.4rem 0 !important;
+	border: 1px solid var(--cc-line-strong) !important;
+	border-top: 2px solid var(--cc-copper) !important;
+	border-radius: 0 !important;
+	background: rgba(10, 10, 12, 0.97) !important;
+	color: var(--cc-silver) !important;
+	box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.9) !important;
+	counter-reset: cc-svc 1;
+}
+
+nav.cc-nav-primary .wp-block-navigation__submenu-container .wp-block-navigation-item {
+	counter-increment: cc-svc;
+}
+
+/* Prime FSE draws separators with ::after on submenu items. */
+nav.cc-nav-primary .wp-block-navigation__submenu-container li::after {
+	display: none !important;
+}
+
+nav.cc-nav-primary .wp-block-navigation__submenu-container .wp-block-navigation-item__content {
+	display: flex;
+	align-items: baseline;
+	gap: 0.85rem;
+	padding: 0.8rem 1.1rem !important;
+	white-space: nowrap;
+}
+
+nav.cc-nav-primary .wp-block-navigation__submenu-container .wp-block-navigation-item__content::before {
+	content: counter(cc-svc, decimal-leading-zero) / "";
+	font-family: var(--cc-mono);
+	font-size: 0.6875rem;
+	font-weight: 700;
+	color: var(--cc-copper);
+}
+
+nav.cc-nav-primary .wp-block-navigation__submenu-container .wp-block-navigation-item__content::after {
+	display: none;
+}
+
+nav.cc-nav-primary .wp-block-navigation__submenu-container .wp-block-navigation-item__content:hover,
+nav.cc-nav-primary .wp-block-navigation__submenu-container .wp-block-navigation-item__content:focus-visible,
+nav.cc-nav-primary .wp-block-navigation__submenu-container .is-active > .wp-block-navigation-item__content {
+	background: var(--cc-titanium);
+	color: var(--cc-copper);
+}
+
+nav.cc-nav-primary .wp-block-navigation__submenu-container .wp-block-navigation-item__content:focus-visible {
+	outline-offset: -2px;
+}
+
 .cc-header__call {
 	margin: 0;
 	flex: 0 0 auto;
@@ -363,13 +456,12 @@ nav.cc-nav-primary .wp-block-navigation__responsive-container.is-menu-open .wp-b
 	width: 100%;
 }
 
-.cc-slide > .alignfull {
-	width: auto;
-}
-
 nav.cc-nav-primary .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation-item {
 	width: 100%;
 	border-top: 1px solid var(--cc-line);
+}
+
+nav.cc-nav-primary .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container > .wp-block-navigation-item {
 	counter-increment: cc-menu;
 }
 
@@ -396,6 +488,39 @@ nav.cc-nav-primary .wp-block-navigation__responsive-container.is-menu-open .wp-b
 }
 
 nav.cc-nav-primary .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation-item__content::after {
+	display: none;
+}
+
+/* Inside the overlay the services list is always expanded, in smaller type. */
+nav.cc-nav-primary .is-menu-open .wp-block-navigation__submenu-container {
+	min-width: 0 !important;
+	margin: 0 0 0.75rem !important;
+	padding: 0 0 0 2.4rem !important;
+	border: 0 !important;
+	background: transparent !important;
+	box-shadow: none !important;
+}
+
+nav.cc-nav-primary .is-menu-open .wp-block-navigation__submenu-container .wp-block-navigation-item {
+	border-top: 0;
+}
+
+nav.cc-nav-primary .is-menu-open .wp-block-navigation__submenu-container .wp-block-navigation-item__content {
+	padding: 0.55rem 0 !important;
+	font-family: var(--cc-body);
+	font-size: 1.125rem;
+	font-weight: 500;
+	letter-spacing: 0;
+	background: transparent;
+}
+
+nav.cc-nav-primary .is-menu-open .wp-block-navigation__submenu-container .wp-block-navigation-item__content::before {
+	content: counter(cc-svc, decimal-leading-zero) / "";
+	font-size: 0.6875rem;
+}
+
+nav.cc-nav-primary .is-menu-open .wp-block-navigation-submenu__toggle,
+nav.cc-nav-primary .is-menu-open .wp-block-navigation__submenu-container::before {
 	display: none;
 }
 
@@ -640,6 +765,10 @@ nav.cc-nav-primary .is-menu-open .cc-nav-call .wp-block-navigation-item__content
 	/* Flex items with auto inline margins shrink to fit; the grids inside are
 	   size containers, so give them their full track explicitly. */
 	width: 100%;
+}
+
+.cc-slide > .alignfull {
+	width: auto;
 }
 
 /* Slide headings. The longest word ("Reparación") is ~9.3em wide in Syne
@@ -2286,6 +2415,43 @@ nav.cc-nav-footer .wp-block-navigation-item__content:hover {
 	color: var(--cc-muted);
 }
 
+/* Internal links to the service sections of the front page. */
+.cc-cta-band__services {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem 1.75rem;
+	margin: 0.5rem 0 0 !important;
+	padding: 0;
+	list-style: none;
+}
+
+.cc-cta-band__services a {
+	display: inline-flex;
+	align-items: baseline;
+	gap: 0.5rem;
+	font-weight: 600;
+	color: var(--cc-silver);
+	text-decoration: none;
+	border-bottom: 1px solid var(--cc-line-strong);
+	padding-bottom: 0.2rem;
+}
+
+.cc-cta-band__services a::after {
+	content: "→" / "";
+	color: var(--cc-copper);
+	transition: transform 0.3s var(--cc-ease);
+}
+
+.cc-cta-band__services a:hover,
+.cc-cta-band__services a:focus-visible {
+	color: var(--cc-copper);
+	border-bottom-color: var(--cc-copper);
+}
+
+.cc-cta-band__services a:hover::after {
+	transform: translateX(0.25rem);
+}
+
 .cc-cta-band__buttons {
 	grid-column: 2 !important;
 	grid-row: 1 / span 3;
@@ -2511,6 +2677,72 @@ nav.cc-nav-footer .wp-block-navigation-item__content:hover {
 			animation-timeline: scroll(root block);
 			animation-range: 0 100vh;
 		}
+	}
+}
+
+/*
+ * "Rodar cilindro": the slides are the faces of a drum. A slide leaving the
+ * top of the viewport pivots on its bottom edge and recedes; the next one
+ * arrives pivoting on its top edge, so the shared edge stays joined like two
+ * faces of a turning cylinder. It is a scroll-driven CSS animation: scrolling
+ * stays native (no wheel or touch handling), a slide at rest is flat
+ * (transform: none) and browsers without support simply scroll flat slides.
+ * The 4.5rem inset is the sticky header, so a snapped slide is "at rest".
+ */
+@media (min-width: 1024px) and (min-height: 680px) and (prefers-reduced-motion: no-preference) {
+	@supports (animation-timeline: view(block 4.5rem 0px)) {
+		.cc-deck > .cc-slide {
+			animation: cc-drum linear both;
+			animation-timeline: view(block 4.5rem 0px);
+		}
+
+		.cc-deck > .cc-slide--hero {
+			animation-name: cc-drum-out;
+		}
+	}
+}
+
+@keyframes cc-drum {
+	entry 0% {
+		opacity: 0.35;
+		transform-origin: 50% 0%;
+		transform: perspective(1400px) rotateX(-22deg);
+	}
+
+	/* Flat a little before/after the edges, so a snapped slide is exactly flat. */
+	entry 95%,
+	entry 100% {
+		opacity: 1;
+		transform-origin: 50% 0%;
+		transform: none;
+	}
+
+	exit 0%,
+	exit 5% {
+		opacity: 1;
+		transform-origin: 50% 100%;
+		transform: none;
+	}
+
+	exit 100% {
+		opacity: 0.35;
+		transform-origin: 50% 100%;
+		transform: perspective(1400px) rotateX(22deg);
+	}
+}
+
+@keyframes cc-drum-out {
+	exit 0%,
+	exit 5% {
+		opacity: 1;
+		transform-origin: 50% 100%;
+		transform: none;
+	}
+
+	exit 100% {
+		opacity: 0.35;
+		transform-origin: 50% 100%;
+		transform: perspective(1400px) rotateX(22deg);
 	}
 }
 
@@ -2888,5 +3120,8 @@ nav.cc-nav-footer .wp-block-navigation-item__content:hover {
 	.cc-slide {
 		min-height: 0;
 		break-inside: avoid;
+		animation: none !important;
+		transform: none !important;
+		opacity: 1 !important;
 	}
 }

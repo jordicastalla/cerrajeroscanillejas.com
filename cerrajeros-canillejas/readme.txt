@@ -2,7 +2,7 @@
 Requires at least: 6.6
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,6 +22,18 @@ Portada en siete «diapositivas» verticales con estética industrial nocturna:
 
 Todo se edita con bloques nativos de Gutenberg desde el Editor del sitio.
 No necesita Getwid, Getwid Mega Menu ni ningún otro plugin.
+
+El menú «Servicios» es un submenú nativo (bloque «Submenú») con enlaces a las
+secciones 02, 03 y 04 de la portada. Se abre al pasar el ratón o con el botón
+de flecha (teclado: Intro / Espacio; Escape lo cierra) y en móvil aparece
+desplegado dentro del menú.
+
+Efecto «rodar cilindro»: en pantallas de 1024 px o más, al pasar de una
+diapositiva a otra las secciones giran como las caras de un tambor. Es una
+animación CSS ligada al desplazamiento (animation-timeline: view()): el scroll
+sigue siendo el nativo del navegador, una diapositiva en reposo queda plana, y
+no se aplica con «reducir movimiento», en móvil ni en navegadores sin soporte
+(en esos casos las secciones se desplazan de forma normal).
 
 == Instalación ==
 
@@ -98,6 +110,41 @@ cerrajeros_canillejas_meta_description
 No se publican horarios, coordenadas, código postal, precios, valoraciones ni zona de
 servicio porque no están confirmados.
 
+== Blog y canibalización SEO ==
+
+Reparto de intenciones de búsqueda:
+
+* Portada (una sola URL): el negocio y sus tres servicios. Las secciones de servicio
+  son anclas (#cambio-cerradura, #cerrojos-seguridad, #cierres-metalicos) de esa
+  misma URL, así que no compiten entre sí.
+* Blog: búsquedas informativas (cómo, por qué, qué elegir, mantenimiento).
+
+Lo que hace el tema (solo si no hay un plugin SEO activo; con plugin, configúralo allí):
+
+* noindex,follow en archivos de autor, de fecha y de etiqueta, que duplican el listado
+  del blog, y los retira del sitemap de WordPress (wp-sitemap.xml).
+  Filtros: cerrajeros_canillejas_noindex_archive, cerrajeros_canillejas_noindex_authors,
+  cerrajeros_canillejas_noindex_tags.
+* Canonical propio en el blog y en las categorías, también en sus páginas 2, 3…
+* Meta descripción informativa para el blog, sin «cerrajeros en Canillejas».
+* La banda del final de cada entrada no repite «cerrajero en Canillejas» ni la dirección:
+  enlaza con texto exacto («Cambio de cerradura», «Instalación de cerrojos de seguridad»,
+  «Reparación de cierres metálicos») a las secciones de la portada, que es la página que
+  debe posicionar para esas búsquedas.
+
+Pautas para quien escriba en el blog:
+
+* No titules una entrada con la búsqueda comercial de la portada («Cerrajero en
+  Canillejas», «Cambio de cerradura en Canillejas»). Mejor preguntas o guías:
+  «¿Cuándo conviene cambiar el bombín?», «Cómo saber si un cierre metálico necesita
+  revisión».
+* No uses como nombre de categoría el nombre de un servicio («Cambio de cerradura»):
+  la categoría competiría con la sección de la portada. Usa temas («Guías», «Seguridad
+  en casa», «Locales y garajes»).
+* En cada entrada, enlaza una vez al servicio relacionado de la portada con su nombre
+  exacto.
+* Si dos entradas responden a la misma pregunta, fusiónalas en una y redirige la otra.
+
 == Créditos ==
 
 Fuentes (SIL Open Font License 1.1, incluidas en assets/fonts con su licencia):
@@ -111,6 +158,12 @@ Logotipo e iconos: derivados del logotipo facilitado por el cliente.
 Diseño y desarrollo: Diània — https://www.diania.dev/
 
 == Changelog ==
+
+= 1.1.0 =
+* Menú «Servicios» desplegable con enlaces a las secciones 02–04 de la portada.
+* Transición «rodar cilindro» entre diapositivas (CSS ligado al scroll, sin bloquear el desplazamiento).
+* SEO: noindex en archivos de autor, fecha y etiqueta; sitemap coherente; canonical en blog y categorías;
+  meta descripción del blog; banda final de entradas con enlaces internos a los servicios de la portada.
 
 = 1.0.0 =
 * Versión inicial.

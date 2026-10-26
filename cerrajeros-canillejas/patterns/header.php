@@ -19,7 +19,13 @@ $cc_tel   = \CerrajerosCanillejas\phone_href();
 <!-- /wp:image -->
 
 <!-- wp:navigation {"overlayMenu":"mobile","className":"cc-nav-primary","layout":{"type":"flex","justifyContent":"right","flexWrap":"nowrap"}} -->
-<!-- wp:navigation-link {"label":"Servicios","url":"<?php echo esc_url( \CerrajerosCanillejas\section_url( 'cambio-cerradura' ) ); ?>","kind":"custom","isTopLevelLink":true} /-->
+<!-- wp:navigation-submenu {"label":"Servicios","url":"<?php echo esc_url( \CerrajerosCanillejas\section_url( 'cambio-cerradura' ) ); ?>","kind":"custom","className":"cc-nav-services"} -->
+<!-- wp:navigation-link {"label":"Cambio Cerradura","url":"<?php echo esc_url( \CerrajerosCanillejas\section_url( 'cambio-cerradura' ) ); ?>","kind":"custom"} /-->
+
+<!-- wp:navigation-link {"label":"Cerrojos de seguridad","url":"<?php echo esc_url( \CerrajerosCanillejas\section_url( 'cerrojos-seguridad' ) ); ?>","kind":"custom"} /-->
+
+<!-- wp:navigation-link {"label":"Cierres metálicos","url":"<?php echo esc_url( \CerrajerosCanillejas\section_url( 'cierres-metalicos' ) ); ?>","kind":"custom"} /-->
+<!-- /wp:navigation-submenu -->
 
 <!-- wp:navigation-link {"label":"Quiénes somos","url":"<?php echo esc_url( \CerrajerosCanillejas\section_url( 'quienes-somos' ) ); ?>","kind":"custom","isTopLevelLink":true} /-->
 

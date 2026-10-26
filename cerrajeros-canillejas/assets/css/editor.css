@@ -48,6 +48,10 @@ nav.cc-deck-index .wp-block-navigation-item__label {
 
 .cc-slide {
 	min-height: 0;
+	/* No drum rotation or reveals while editing. */
+	animation: none !important;
+	transform: none !important;
+	opacity: 1 !important;
 }
 
 .cc-marquee {
