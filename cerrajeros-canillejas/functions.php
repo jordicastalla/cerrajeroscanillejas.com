@@ -14,7 +14,7 @@ namespace CerrajerosCanillejas;
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'CERRAJEROS_CANILLEJAS_VERSION', '1.3.0' );
+define( 'CERRAJEROS_CANILLEJAS_VERSION', '1.3.1' );
 
 require_once __DIR__ . '/inc/business.php';
 require_once __DIR__ . '/inc/setup.php';

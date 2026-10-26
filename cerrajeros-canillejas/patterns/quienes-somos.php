@@ -35,7 +35,7 @@
 <!-- /wp:heading -->
 
 <!-- wp:paragraph {"dropCap":true} -->
-<p class="has-drop-cap">Aunque ahora Canillejas es uno de los barrios más seguros y tranquilos para vivir en Madrid, no siempre fue así. Nosotros nos criamos cuando fue uno de los puntos de la Ruta del Bakalao y de seguro no tenía nada.</p>
+<p class="has-drop-cap">Aunque ahora Canillejas es un barrio tranquilo, con alma de pueblo, no siempre fue así. Nosotros nos criamos cuando fue uno de los puntos de la Ruta del Bakalao y de seguro no tenía nada.</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
@@ -47,7 +47,7 @@
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
-<p>Ahora nos dedicamos a la seguridad y la cerrajería, tanto de diario como de urgencia, en nuestro barrio, Canillejas, y alrededores: San Blas, Rosas, Hellín o El Salvador.</p>
+<p>Ahora nos dedicamos a la seguridad y la cerrajería, tanto de diario como de urgencia, en nuestro barrio, Canillejas, y alrededores: San Blas, Simancas, Hellín, Amposta, Arcos, Rosas, Rejas o El Salvador.</p>
 <!-- /wp:paragraph --></div>
 <!-- /wp:group -->
 

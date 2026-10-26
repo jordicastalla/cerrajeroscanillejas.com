@@ -35,7 +35,7 @@ function business() {
 				'country'        => 'ES',
 				'country_name'   => 'España',
 				'landmark'       => 'junto a la oficina de Correos',
-				'areas'          => array( 'Canillejas', 'San Blas', 'Rosas', 'Hellín', 'El Salvador' ),
+				'areas'          => array( 'Canillejas', 'San Blas', 'Simancas', 'Hellín', 'Amposta', 'Arcos', 'Rosas', 'Rejas', 'El Salvador' ),
 			)
 		);
 	}

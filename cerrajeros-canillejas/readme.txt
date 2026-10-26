@@ -2,7 +2,7 @@
 Requires at least: 6.6
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -110,7 +110,7 @@ cerrajeros_canillejas_meta_description
 
 No se publican horarios, coordenadas, código postal, precios ni valoraciones porque no
 están confirmados. Sí están confirmados por el negocio la zona de servicio (Canillejas,
-San Blas, Rosas, Hellín y El Salvador → areaServed) y el servicio de diario y de urgencia;
+San Blas, Simancas, Hellín, Amposta, Arcos, Rosas, Rejas y El Salvador → areaServed) y el servicio de diario y de urgencia;
 «urgencia» no implica disponibilidad 24 horas, así que no se publica.
 
 == Blog y canibalización SEO ==
@@ -161,6 +161,10 @@ Logotipo e iconos: derivados del logotipo facilitado por el cliente.
 Diseño y desarrollo: Diània — https://www.diania.dev/
 
 == Changelog ==
+
+= 1.3.1 =
+* «Quiénes Somos»: «un barrio tranquilo, con alma de pueblo» en lugar de «uno de los barrios más seguros».
+* Zona de servicio ampliada a Simancas, Amposta, Arcos y Rejas (texto, FAQ y areaServed).
 
 = 1.3.0 =
 * «Rodar cilindro» pasa de CSS (animation-timeline, sin soporte por defecto en Firefox) a
