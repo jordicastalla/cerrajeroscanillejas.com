@@ -1,0 +1,51 @@
+<!-- wp:template-part {"slug":"header","area":"header","tagName":"header","className":"cc-site-header"} /-->
+
+<!-- wp:group {"tagName":"main","className":"cc-blog","layout":{"type":"constrained"}} -->
+<main class="wp-block-group cc-blog"><!-- wp:group {"align":"wide","className":"cc-masthead","layout":{"type":"default"}} -->
+<div class="wp-block-group alignwide cc-masthead"><!-- wp:cerrajeros-canillejas/breadcrumbs /-->
+
+<!-- wp:paragraph {"className":"cc-kicker"} -->
+<p class="cc-kicker"><strong>Búsqueda</strong> Cerrajeros Canillejas</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:query-title {"type":"search","className":"cc-masthead__title"} /-->
+
+<!-- wp:search {"label":"Buscar en el sitio","showLabel":false,"placeholder":"Buscar…","buttonText":"Buscar","className":"cc-search"} /--></div>
+<!-- /wp:group -->
+
+<!-- wp:query {"queryId":1,"query":{"perPage":10,"pages":0,"offset":0,"postType":"post","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":true},"align":"wide","className":"cc-postlist"} -->
+<div class="wp-block-query alignwide cc-postlist"><!-- wp:post-template {"className":"cc-postlist__list"} -->
+<!-- wp:group {"tagName":"article","className":"cc-postlist__item","layout":{"type":"default"}} -->
+<article class="wp-block-group cc-postlist__item"><!-- wp:post-featured-image {"isLink":true,"aspectRatio":"4/3","sizeSlug":"medium_large","className":"cc-postlist__thumb"} /-->
+
+<!-- wp:group {"className":"cc-postlist__body","layout":{"type":"default"}} -->
+<div class="wp-block-group cc-postlist__body"><!-- wp:group {"className":"cc-postlist__meta","layout":{"type":"flex","flexWrap":"wrap"}} -->
+<div class="wp-block-group cc-postlist__meta"><!-- wp:post-date /-->
+
+<!-- wp:post-terms {"term":"category"} /--></div>
+<!-- /wp:group -->
+
+<!-- wp:post-title {"level":2,"isLink":true,"className":"cc-postlist__title"} /-->
+
+<!-- wp:post-excerpt {"excerptLength":32,"className":"cc-postlist__excerpt"} /--></div>
+<!-- /wp:group --></article>
+<!-- /wp:group -->
+<!-- /wp:post-template -->
+
+<!-- wp:query-pagination {"paginationArrow":"arrow","className":"cc-pagination","layout":{"type":"flex","justifyContent":"space-between"}} -->
+<!-- wp:query-pagination-previous {"label":"Anteriores"} /-->
+
+<!-- wp:query-pagination-numbers /-->
+
+<!-- wp:query-pagination-next {"label":"Siguientes"} /-->
+<!-- /wp:query-pagination -->
+
+<!-- wp:query-no-results -->
+<!-- wp:paragraph {"className":"cc-postlist__empty"} -->
+<p class="cc-postlist__empty">No hemos encontrado resultados. Prueba con otras palabras o llámanos al +34 919 932 556.</p>
+<!-- /wp:paragraph -->
+<!-- /wp:query-no-results --></div>
+<!-- /wp:query --></main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","area":"footer","tagName":"footer"} /-->

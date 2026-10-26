@@ -1,0 +1,2892 @@
+/**
+ * Cerrajeros Canillejas — design layer.
+ *
+ * Loaded after Prime FSE's style.css on the front end and inside the editor
+ * (add_editor_style). Colours, fonts and spacing come from theme.json presets;
+ * this file adds composition, texture and motion.
+ *
+ * Sections
+ *  01 Tokens and parent-theme aliases
+ *  02 Base
+ *  03 Header and navigation
+ *  04 Buttons and call slabs
+ *  05 Slide system
+ *  06 Slide 01 — Hero
+ *  07 Slide 02 — Cambio Cerradura
+ *  08 Slide 03 — Cerrojos de seguridad
+ *  09 Slide 04 — Cierres metálicos
+ *  10 Slide 05 — Quiénes somos + FAQ
+ *  11 Slide 06 — Últimas entradas
+ *  12 Slide 07 — Contacto
+ *  13 Deck index
+ *  14 Footer and mobile call bar
+ *  15 Blog, posts, pages, 404
+ *  16 Motion: reveals, scroll-driven effects, cursor
+ *  17 Responsive
+ *  18 Reduced motion, forced colours, print
+ */
+
+/* ==========================================================================
+   01 Tokens and parent-theme aliases
+   ========================================================================== */
+
+:root {
+	--cc-charcoal: var(--wp--preset--color--charcoal, #0a0a0c);
+	--cc-titanium: var(--wp--preset--color--titanium, #1e2024);
+	--cc-steel: var(--wp--preset--color--steel, #2d3139);
+	--cc-copper: var(--wp--preset--color--copper, #d95325);
+	--cc-silver: var(--wp--preset--color--silver, #e2e4e9);
+
+	/* Text tints, checked for AA contrast on charcoal and titanium. */
+	--cc-muted: rgba(226, 228, 233, 0.76);
+	--cc-faint: rgba(226, 228, 233, 0.62);
+
+	--cc-line: rgba(226, 228, 233, 0.11);
+	--cc-line-strong: rgba(226, 228, 233, 0.24);
+
+	--cc-display: var(--wp--preset--font-family--syne, Syne, "Arial Black", sans-serif);
+	--cc-body: var(--wp--preset--font-family--instrument-sans, "Instrument Sans", Arial, sans-serif);
+	--cc-mono: var(--wp--preset--font-family--space-mono, "Space Mono", ui-monospace, monospace);
+
+	--cc-gutter: var(--wp--style--root--padding-left, clamp(1.125rem, 4vw, 3.5rem));
+	--cc-header-h: 4.5rem;
+	--cc-admin-bar: var(--wp-admin--admin-bar--height, 0px);
+	--cc-ease: cubic-bezier(0.2, 0.7, 0.1, 1);
+	--cc-chamfer: 1.25rem;
+
+	--cc-noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .6 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+	--cc-grid: linear-gradient(var(--cc-line) 1px, transparent 1px), linear-gradient(90deg, var(--cc-line) 1px, transparent 1px);
+
+	/*
+	 * Prime FSE's style.css and theme.json reference these presets. The child
+	 * palette uses semantic slugs, so map the parent names onto the dark
+	 * system: accent → copper, "dark text" → silver, "white surface" → charcoal.
+	 */
+	--wp--preset--color--color-1: var(--cc-copper);
+	--wp--preset--color--color-2: var(--cc-copper);
+	--wp--preset--color--color-4: var(--cc-silver);
+	--wp--preset--color--color-6: var(--cc-steel);
+	--wp--preset--color--color-7: var(--cc-line-strong);
+	--wp--preset--color--color-9: var(--cc-charcoal);
+	--wp--preset--font-family--sora: var(--cc-body);
+}
+
+/* ==========================================================================
+   02 Base
+   ========================================================================== */
+
+html {
+	scroll-padding-top: calc(var(--cc-header-h) + var(--cc-admin-bar));
+	-webkit-text-size-adjust: 100%;
+}
+
+body {
+	background-color: var(--cc-charcoal);
+	color: var(--cc-silver);
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	overflow-x: clip;
+}
+
+/* Fine grain over the whole canvas: depth without flat black. */
+body::after {
+	content: "";
+	position: fixed;
+	inset: 0;
+	z-index: 100;
+	pointer-events: none;
+	background-image: var(--cc-noise);
+	opacity: 0.045;
+	mix-blend-mode: soft-light;
+}
+
+::selection {
+	background: var(--cc-copper);
+	color: var(--cc-charcoal);
+}
+
+.wp-site-blocks > * {
+	margin-block-start: 0;
+}
+
+a {
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.22em;
+	text-decoration-color: rgba(217, 83, 37, 0.7);
+	transition: color 0.2s ease, text-decoration-color 0.2s ease, background-color 0.25s ease;
+}
+
+a:hover {
+	text-decoration-color: currentColor;
+}
+
+:where(a, button, summary, input, select, textarea, [tabindex]):focus-visible {
+	outline: 2px solid var(--cc-copper);
+	outline-offset: 3px;
+	border-radius: 0;
+}
+
+img,
+svg {
+	max-width: 100%;
+	height: auto;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	text-wrap: balance;
+	overflow-wrap: break-word;
+}
+
+p {
+	text-wrap: pretty;
+}
+
+strong {
+	font-weight: 600;
+	color: var(--cc-silver);
+}
+
+hr.wp-block-separator {
+	border: 0;
+	height: 1px !important;
+	background: var(--cc-line-strong);
+	opacity: 1;
+}
+
+.screen-reader-text:focus,
+.skip-link:focus {
+	background: var(--cc-copper) !important;
+	color: var(--cc-charcoal) !important;
+	clip-path: none;
+	z-index: 1000;
+}
+
+/* Small technical label used across slides, footer and cards. */
+.cc-kicker,
+.cc-label {
+	font-family: var(--cc-mono);
+	font-size: 0.75rem;
+	font-weight: 400;
+	letter-spacing: 0.16em;
+	line-height: 1.4;
+	text-transform: uppercase;
+	color: var(--cc-faint);
+}
+
+.cc-kicker {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5rem 0.9rem;
+}
+
+.cc-kicker strong {
+	color: var(--cc-copper);
+	font-weight: 700;
+	letter-spacing: 0.08em;
+}
+
+/* Copper needs a charcoal ground for small text (4.9:1); on titanium slides
+   the slide number sits on a charcoal chip. */
+.cc-slide--bolt .cc-kicker strong,
+.cc-slide--posts .cc-kicker strong {
+	padding: 0.2em 0.5em;
+	background: var(--cc-charcoal);
+}
+
+.cc-kicker::after {
+	content: "";
+	flex: 0 1 7rem;
+	height: 1px;
+	background: linear-gradient(90deg, var(--cc-line-strong), transparent);
+}
+
+.cc-lead {
+	font-size: var(--wp--preset--font-size--large);
+	line-height: 1.5;
+	color: var(--cc-silver);
+}
+
+/* Form fields: Prime FSE ships white inputs. */
+input[type="text"],
+input[type="email"],
+input[type="url"],
+input[type="password"],
+input[type="search"],
+input[type="number"],
+input[type="tel"],
+textarea,
+select {
+	background: var(--cc-titanium);
+	color: var(--cc-silver);
+	border: 1px solid var(--cc-line-strong);
+	border-radius: 0;
+	font-family: var(--cc-body);
+}
+
+::placeholder {
+	color: var(--cc-faint);
+	opacity: 1;
+}
+
+/* ==========================================================================
+   03 Header and navigation
+   ========================================================================== */
+
+.cc-site-header {
+	position: sticky;
+	top: var(--cc-admin-bar);
+	z-index: 50;
+	border-bottom: 1px solid var(--cc-line);
+}
+
+/* The blur lives on a pseudo-element: backdrop-filter on the header itself
+   would trap the fixed mobile menu overlay inside the header box. */
+.cc-site-header::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	background: rgba(10, 10, 12, 0.8);
+	-webkit-backdrop-filter: blur(14px) saturate(1.15);
+	backdrop-filter: blur(14px) saturate(1.15);
+}
+
+.cc-header {
+	display: flex;
+	align-items: center;
+	gap: clamp(0.75rem, 2vw, 2rem);
+	min-height: var(--cc-header-h);
+	margin: 0 !important;
+	padding-inline: var(--cc-gutter);
+	max-width: none !important;
+}
+
+.cc-header > * {
+	margin-block: 0 !important;
+}
+
+.cc-header__logo {
+	flex: 0 0 auto;
+	width: clamp(118px, 11vw, 164px);
+	margin: 0;
+	line-height: 0;
+}
+
+.cc-header__logo a {
+	display: inline-block;
+}
+
+.cc-header__logo img {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+nav.cc-nav-primary {
+	margin-inline-start: auto;
+}
+
+nav.cc-nav-primary .wp-block-navigation-item__content {
+	position: relative;
+	padding: 0.5rem 0.15rem !important;
+	color: var(--cc-silver);
+}
+
+nav.cc-nav-primary .wp-block-navigation__container {
+	gap: clamp(1rem, 2.2vw, 2.25rem);
+}
+
+nav.cc-nav-primary .wp-block-navigation-item__content::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0.15rem;
+	height: 1px;
+	background: var(--cc-copper);
+	transform: scaleX(0);
+	transform-origin: left;
+	transition: transform 0.35s var(--cc-ease);
+}
+
+nav.cc-nav-primary .wp-block-navigation-item__content:hover::after,
+nav.cc-nav-primary .wp-block-navigation-item__content:focus-visible::after,
+nav.cc-nav-primary .is-active > .wp-block-navigation-item__content::after {
+	transform: scaleX(1);
+}
+
+nav.cc-nav-primary .is-active > .wp-block-navigation-item__content {
+	color: var(--cc-copper);
+}
+
+.cc-header__call {
+	margin: 0;
+	flex: 0 0 auto;
+}
+
+.cc-header__call .wp-block-button__link {
+	font-size: 0.9375rem;
+	padding: 0.7rem 1rem 0.7rem 0.9rem;
+}
+
+/* Mobile overlay */
+.wp-block-navigation__responsive-container-open,
+.wp-block-navigation__responsive-container-close {
+	color: var(--cc-silver);
+}
+
+.wp-block-navigation__responsive-container-open svg,
+.wp-block-navigation__responsive-container-close svg {
+	width: 28px;
+	height: 28px;
+}
+
+nav.cc-nav-primary .wp-block-navigation__responsive-container.is-menu-open {
+	background:
+		radial-gradient(90% 60% at 100% 100%, rgba(217, 83, 37, 0.22), transparent 60%),
+		var(--cc-grid),
+		var(--cc-charcoal) !important;
+	background-size: auto, 48px 48px, 48px 48px, auto !important;
+	color: var(--cc-silver) !important;
+	padding: calc(var(--cc-admin-bar) + 1.25rem) var(--cc-gutter) 2rem;
+}
+
+nav.cc-nav-primary .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content {
+	padding-top: 4rem;
+	counter-reset: cc-menu;
+}
+
+nav.cc-nav-primary .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container {
+	gap: 0.25rem;
+	width: 100%;
+}
+
+.cc-slide > .alignfull {
+	width: auto;
+}
+
+nav.cc-nav-primary .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation-item {
+	width: 100%;
+	border-top: 1px solid var(--cc-line);
+	counter-increment: cc-menu;
+}
+
+nav.cc-nav-primary .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation-item__content {
+	display: flex;
+	align-items: baseline;
+	gap: 1rem;
+	width: 100%;
+	padding: 1rem 0 !important;
+	font-family: var(--cc-display);
+	font-size: clamp(2rem, 9vw, 3rem);
+	font-weight: 800;
+	letter-spacing: -0.02em;
+	line-height: 1;
+}
+
+nav.cc-nav-primary .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation-item__content::before {
+	content: counter(cc-menu, decimal-leading-zero) / "";
+	font-family: var(--cc-mono);
+	font-size: 0.75rem;
+	font-weight: 700;
+	letter-spacing: 0.1em;
+	color: var(--cc-copper);
+}
+
+nav.cc-nav-primary .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation-item__content::after {
+	display: none;
+}
+
+/* Call link inside the menu: only shown in the mobile overlay, where the
+   header button is not visible. */
+nav.cc-nav-primary .cc-nav-call {
+	display: none !important;
+}
+
+nav.cc-nav-primary .is-menu-open .cc-nav-call {
+	display: flex !important;
+	margin-top: 1.5rem;
+	border-top: 0 !important;
+}
+
+nav.cc-nav-primary .is-menu-open .cc-nav-call .wp-block-navigation-item__content {
+	justify-content: center;
+	padding: 1.1rem 1rem !important;
+	background: var(--cc-copper);
+	color: var(--cc-charcoal) !important;
+	font-family: var(--cc-body);
+	font-size: 1.125rem;
+	font-weight: 700;
+	letter-spacing: 0;
+	clip-path: polygon(0 0, calc(100% - 0.9rem) 0, 100% 0.9rem, 100% 100%, 0 100%);
+}
+
+nav.cc-nav-primary .is-menu-open .cc-nav-call .wp-block-navigation-item__content::before {
+	display: none;
+}
+
+/* ==========================================================================
+   04 Buttons and call slabs
+   ========================================================================== */
+
+.wp-block-button__link,
+.wp-element-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.6rem;
+	transition: background-color 0.25s ease, color 0.25s ease, transform 0.25s var(--cc-ease);
+}
+
+/* Copper call button: the primary conversion element. */
+.wp-block-button.is-style-call .wp-block-button__link {
+	background-color: var(--cc-copper);
+	color: var(--cc-charcoal);
+	font-weight: 700;
+	letter-spacing: 0.01em;
+	white-space: nowrap;
+	clip-path: polygon(0 0, calc(100% - 0.7rem) 0, 100% 0.7rem, 100% 100%, 0 100%);
+}
+
+.wp-block-button.is-style-call .wp-block-button__link::before {
+	content: "";
+	flex: 0 0 auto;
+	width: 1.05em;
+	height: 1.05em;
+	background-color: currentColor;
+	-webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1z'/%3E%3C/svg%3E") center / contain no-repeat;
+	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1z'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.wp-block-button.is-style-call .wp-block-button__link:hover,
+.wp-block-button.is-style-call .wp-block-button__link:focus-visible {
+	background-color: var(--cc-silver);
+	color: var(--cc-charcoal);
+}
+
+/* Text link with an arrow, for secondary actions. */
+.wp-block-button.is-style-arrow .wp-block-button__link {
+	background: transparent;
+	color: var(--cc-silver);
+	padding: 0.5rem 0;
+	border-bottom: 1px solid var(--cc-line-strong);
+	font-family: var(--cc-mono);
+	font-size: 0.8125rem;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+}
+
+.wp-block-button.is-style-arrow .wp-block-button__link::after {
+	content: "→" / "";
+	color: var(--cc-copper);
+	transition: transform 0.3s var(--cc-ease);
+}
+
+.wp-block-button.is-style-arrow .wp-block-button__link:hover,
+.wp-block-button.is-style-arrow .wp-block-button__link:focus-visible {
+	background: transparent;
+	color: var(--cc-copper);
+	border-bottom-color: var(--cc-copper);
+}
+
+.wp-block-button.is-style-arrow .wp-block-button__link:hover::after {
+	transform: translateX(0.35rem);
+}
+
+.wp-block-button.is-style-outline .wp-block-button__link:hover {
+	background: var(--cc-silver);
+	color: var(--cc-charcoal) !important;
+	border-color: var(--cc-silver);
+}
+
+/*
+ * Call slab: a chamfered copper plate echoing the octagonal "C" of the logo.
+ * The whole plate is clickable through the number link.
+ */
+.cc-callslab {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+	padding: 1.1rem 1.4rem 1.15rem;
+	background:
+		linear-gradient(115deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0) 38%),
+		var(--cc-copper);
+	color: var(--cc-charcoal);
+	clip-path: polygon(0 0, calc(100% - var(--cc-chamfer)) 0, 100% var(--cc-chamfer), 100% 100%, var(--cc-chamfer) 100%, 0 calc(100% - var(--cc-chamfer)));
+	transition: background-color 0.3s ease, transform 0.3s var(--cc-ease);
+}
+
+.cc-callslab > * {
+	margin: 0 !important;
+}
+
+.cc-callslab__label {
+	font-family: var(--cc-mono);
+	font-size: 0.75rem;
+	font-weight: 700;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	color: var(--cc-charcoal);
+}
+
+.cc-callslab__label::before {
+	content: "";
+	display: inline-block;
+	width: 0.5rem;
+	height: 0.5rem;
+	margin-right: 0.6rem;
+	background: var(--cc-charcoal);
+	border-radius: 50%;
+	vertical-align: 0.05em;
+	animation: cc-pulse 2.4s ease-in-out infinite;
+}
+
+.cc-callslab__note {
+	font-size: 0.875rem;
+	color: var(--cc-charcoal);
+}
+
+.cc-callslab .wp-block-buttons {
+	margin: 0;
+}
+
+.cc-callslab .wp-block-button.is-style-call .wp-block-button__link {
+	position: static;
+	padding: 0;
+	background: transparent;
+	clip-path: none;
+	font-family: var(--cc-display);
+	font-size: clamp(1.5rem, 1rem + 2.4vw, 3rem);
+	font-size: min(3.25rem, 6.6cqi);
+	font-weight: 800;
+	letter-spacing: -0.02em;
+	line-height: 1.05;
+	gap: 0.85rem;
+}
+
+/* Syne widens as it gets bolder; narrow plates use the 700 cut. */
+@container (max-width: 560px) {
+	.cc-callslab .wp-block-button.is-style-call .wp-block-button__link {
+		font-weight: 700;
+		font-size: min(2.75rem, 9.4cqi);
+	}
+}
+
+.cc-callslab .wp-block-button.is-style-call .wp-block-button__link::before {
+	width: 0.7em;
+	height: 0.7em;
+}
+
+.cc-callslab .wp-block-button.is-style-call .wp-block-button__link::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+}
+
+.cc-callslab:hover,
+.cc-callslab:focus-within {
+	background-color: var(--cc-silver);
+}
+
+.cc-callslab .wp-block-button__link:hover,
+.cc-callslab .wp-block-button__link:focus-visible {
+	background: transparent !important;
+	color: var(--cc-charcoal) !important;
+}
+
+.cc-callslab .wp-block-button__link:focus-visible {
+	outline: 2px solid var(--cc-charcoal);
+	outline-offset: 4px;
+}
+
+.cc-callslab--compact {
+	max-width: 30rem;
+}
+
+.cc-callslab--compact .wp-block-button.is-style-call .wp-block-button__link {
+	font-size: min(2.4rem, 6.6cqi);
+}
+
+/* ==========================================================================
+   05 Slide system
+   ========================================================================== */
+
+.cc-deck {
+	margin-block: 0 !important;
+}
+
+.cc-deck > .cc-slide {
+	margin-block: 0 !important;
+}
+
+.cc-slide {
+	position: relative;
+	isolation: isolate;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	min-height: calc(100svh - var(--cc-header-h) - var(--cc-admin-bar));
+	padding-block: clamp(4rem, 10vh, 8rem);
+	overflow-x: clip;
+	border-top: 1px solid var(--cc-line);
+}
+
+.cc-slide > * {
+	margin-block: 0;
+	/* Flex items with auto inline margins shrink to fit; the grids inside are
+	   size containers, so give them their full track explicitly. */
+	width: 100%;
+}
+
+/* Slide headings. The longest word ("Reparación") is ~9.3em wide in Syne
+   ExtraBold, so the size is capped at ~10.5% of the containing column. */
+.cc-split__text,
+.cc-posts__head,
+.cc-shutter-sign__inner,
+.cc-hero,
+.cc-bolt,
+.cc-about,
+.cc-contact,
+.cc-callslab,
+.cc-contact__phone {
+	container-type: inline-size;
+}
+
+.cc-slide__title {
+	margin: 0;
+	font-size: clamp(2.5rem, 1.25rem + 5vw, 6.5rem);
+	font-size: min(clamp(2.5rem, 1.25rem + 5vw, 6.5rem), 10.4cqi);
+	font-weight: 800;
+	line-height: 0.92;
+	letter-spacing: -0.035em;
+	hyphens: manual;
+}
+
+/* Giant outline numeral behind each service slide (decorative). */
+.cc-slide::after {
+	position: absolute;
+	right: calc(var(--cc-gutter) * -0.5);
+	bottom: -0.12em;
+	z-index: -1;
+	font-family: var(--cc-display);
+	font-size: clamp(12rem, 30vw, 30rem);
+	font-weight: 800;
+	line-height: 0.8;
+	letter-spacing: -0.06em;
+	color: transparent;
+	-webkit-text-stroke: 1px rgba(226, 228, 233, 0.06);
+	pointer-events: none;
+}
+
+.cc-slide--lock::after { content: "02"; content: "02" / ""; }
+.cc-slide--bolt::after { content: "03"; content: "03" / ""; }
+.cc-slide--shutter::after { content: "04"; content: "04" / ""; }
+.cc-slide--about::after { content: "05"; content: "05" / ""; }
+.cc-slide--posts::after { content: "06"; content: "06" / ""; }
+.cc-slide--contact::after { content: "07"; content: "07" / ""; }
+
+/* Generic 12-column editorial grid used by split slides. */
+.cc-split,
+.cc-hero,
+.cc-bolt,
+.cc-about,
+.cc-posts,
+.cc-contact {
+	display: grid;
+	grid-template-columns: repeat(12, minmax(0, 1fr));
+	column-gap: clamp(1rem, 2.4vw, 2.5rem);
+	row-gap: clamp(1.25rem, 3vh, 2.25rem);
+	align-items: start;
+}
+
+.cc-split > *,
+.cc-hero > *,
+.cc-bolt > *,
+.cc-about > *,
+.cc-posts > *,
+.cc-contact > * {
+	margin: 0 !important;
+	min-width: 0;
+}
+
+.cc-split__text,
+.cc-split__media {
+	display: flex;
+	flex-direction: column;
+	gap: 1.4rem;
+}
+
+.cc-split__text > *,
+.cc-split__media > * {
+	margin: 0 !important;
+}
+
+.cc-split--media-left .cc-split__media {
+	grid-column: 1 / span 7;
+	grid-row: 1;
+}
+
+/* On wide screens the drawing stays in view while the text scrolls past. */
+@media (min-width: 1101px) {
+	.cc-split__media {
+		position: sticky;
+		top: calc(var(--cc-header-h) + var(--cc-admin-bar) + 2.5rem);
+		align-self: start;
+	}
+}
+
+.cc-split--media-left .cc-split__text {
+	grid-column: 8 / -1;
+	grid-row: 1;
+}
+
+/* Technical drawing frame: blueprint grid, hairline border, crop corners. */
+.wp-block-image.is-style-drawing {
+	position: relative;
+	margin: 0;
+	padding: clamp(0.75rem, 2vw, 1.75rem);
+	background:
+		radial-gradient(70% 70% at 50% 45%, rgba(45, 49, 57, 0.55), transparent 75%),
+		var(--cc-grid);
+	background-size: auto, 32px 32px, 32px 32px;
+	background-position: center;
+	border: 1px solid var(--cc-line);
+}
+
+.wp-block-image.is-style-drawing img {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+.wp-block-image.is-style-drawing figcaption,
+.wp-block-image.is-style-drawing .wp-element-caption {
+	position: absolute;
+	left: clamp(0.75rem, 2vw, 1.75rem);
+	bottom: calc(clamp(0.75rem, 2vw, 1.75rem) * -1 - 1.75rem);
+	margin: 0;
+	font-family: var(--cc-mono);
+	font-size: 0.6875rem;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: var(--cc-faint);
+}
+
+/* Index list: technical numbering with hairlines. */
+.wp-block-list.is-style-index {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	counter-reset: cc-index;
+	border-bottom: 1px solid var(--cc-line);
+}
+
+.wp-block-list.is-style-index > li {
+	position: relative;
+	display: grid;
+	grid-template-columns: 2.75rem 1fr;
+	padding: 0.85rem 0;
+	border-top: 1px solid var(--cc-line);
+	color: var(--cc-muted);
+	counter-increment: cc-index;
+	line-height: 1.5;
+}
+
+.wp-block-list.is-style-index > li::before {
+	content: counter(cc-index, decimal-leading-zero) / "";
+	grid-row: 1 / span 2;
+	padding-top: 0.2rem;
+	font-family: var(--cc-mono);
+	font-size: 0.75rem;
+	font-weight: 700;
+	color: var(--cc-copper);
+}
+
+.wp-block-list.is-style-index > li strong {
+	color: var(--cc-silver);
+	font-weight: 600;
+}
+
+/* Tag row */
+.cc-tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.cc-tags li {
+	padding: 0.4rem 0.7rem;
+	border: 1px solid var(--cc-line-strong);
+	font-family: var(--cc-mono);
+	font-size: 0.6875rem;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: var(--cc-muted);
+}
+
+/* ==========================================================================
+   06 Slide 01 — Hero
+   ========================================================================== */
+
+.cc-slide--hero {
+	border-top: 0;
+	padding-block: clamp(2.5rem, 7vh, 5.5rem) clamp(6rem, 13vh, 9rem);
+	background:
+		radial-gradient(60% 70% at 78% 42%, rgba(217, 83, 37, 0.16), transparent 62%),
+		radial-gradient(40% 50% at 10% 100%, rgba(45, 49, 57, 0.5), transparent 70%);
+}
+
+.cc-slide--hero::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: -2;
+	background-image: var(--cc-grid);
+	background-size: 64px 64px;
+	background-position: center top;
+	-webkit-mask-image: radial-gradient(70% 70% at 70% 40%, #000 0%, transparent 75%);
+	mask-image: radial-gradient(70% 70% at 70% 40%, #000 0%, transparent 75%);
+	opacity: 0.8;
+}
+
+.cc-hero {
+	position: relative;
+	align-items: end;
+}
+
+.cc-hero__kicker {
+	grid-column: 1 / -1;
+	grid-row: 1;
+}
+
+.cc-hero__title {
+	grid-column: 1 / -1;
+	grid-row: 2;
+	z-index: 2;
+	margin: 0;
+	font-size: clamp(2.4rem, 0.9rem + 8.2vw, 10.25rem);
+	font-size: min(clamp(2.4rem, 0.9rem + 8.2vw, 10.25rem), 12.2cqi);
+	font-weight: 800;
+	line-height: 0.86;
+	letter-spacing: -0.045em;
+	text-wrap: initial;
+}
+
+.cc-hero__title em {
+	display: block;
+	padding-inline-start: 0.62em;
+	font-style: normal;
+	color: var(--cc-silver);
+	background: linear-gradient(100deg, #f6f7f9 0%, #9aa0aa 30%, #f6f7f9 48%, #7c828c 66%, #e2e4e9 84%, #b4b9c1 100%);
+	-webkit-background-clip: text;
+	background-clip: text;
+	-webkit-text-fill-color: transparent;
+}
+
+.cc-hero__figure {
+	grid-column: 7 / -1;
+	grid-row: 1 / span 3;
+	align-self: center;
+	justify-self: end;
+	z-index: 0;
+	width: min(100%, 38rem);
+	margin: 0 !important;
+	opacity: 0.92;
+	pointer-events: none;
+}
+
+.cc-hero__figure img {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+.cc-hero__lead {
+	grid-column: 1 / span 5;
+	grid-row: 3;
+	z-index: 2;
+	max-width: 36ch;
+	font-size: var(--wp--preset--font-size--large);
+	line-height: 1.5;
+	color: var(--cc-muted);
+}
+
+.cc-hero__call {
+	grid-column: 6 / -1;
+	max-width: 46rem;
+	grid-row: 3;
+	z-index: 2;
+	align-self: end;
+}
+
+/* Service agenda: the deck's table of contents. */
+.cc-agenda {
+	grid-column: 1 / -1;
+	grid-row: 4;
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	border-top: 1px solid var(--cc-line-strong);
+}
+
+.cc-agenda li {
+	margin: 0;
+	border-right: 1px solid var(--cc-line);
+}
+
+.cc-agenda li:last-child {
+	border-right: 0;
+}
+
+.cc-agenda a {
+	position: relative;
+	display: flex;
+	align-items: baseline;
+	gap: 0.8rem;
+	height: 100%;
+	padding: 1.1rem 1.25rem 0.4rem 0;
+	font-family: var(--cc-display);
+	font-size: clamp(1rem, 0.8rem + 0.6vw, 1.3rem);
+	font-weight: 700;
+	letter-spacing: -0.01em;
+	color: var(--cc-silver);
+	text-decoration: none;
+}
+
+.cc-agenda li + li a {
+	padding-inline-start: 1.25rem;
+}
+
+.cc-agenda a strong {
+	font-family: var(--cc-mono);
+	font-size: 0.75rem;
+	font-weight: 700;
+	color: var(--cc-copper);
+}
+
+.cc-agenda a::before {
+	content: "";
+	position: absolute;
+	top: -1px;
+	left: 0;
+	width: 100%;
+	height: 2px;
+	background: var(--cc-copper);
+	transform: scaleX(0);
+	transform-origin: left;
+	transition: transform 0.45s var(--cc-ease);
+}
+
+.cc-agenda a::after {
+	content: "↘" / "";
+	margin-inline-start: auto;
+	color: var(--cc-faint);
+	transition: transform 0.3s var(--cc-ease), color 0.3s ease;
+}
+
+.cc-agenda a:hover,
+.cc-agenda a:focus-visible {
+	color: var(--cc-copper);
+}
+
+.cc-agenda a:hover::before,
+.cc-agenda a:focus-visible::before {
+	transform: scaleX(1);
+}
+
+.cc-agenda a:hover::after {
+	color: var(--cc-copper);
+	transform: translate(0.15rem, 0.15rem);
+}
+
+/* Oversized outline typography drifting with the scroll (decorative). */
+.cc-marquee {
+	position: absolute;
+	left: 0;
+	bottom: -0.18em;
+	z-index: -1;
+	max-width: none !important;
+	margin: 0 !important;
+	white-space: nowrap;
+	font-family: var(--cc-display);
+	font-size: clamp(4rem, 11vw, 11rem);
+	font-weight: 800;
+	line-height: 1;
+	letter-spacing: -0.03em;
+	text-transform: uppercase;
+	color: transparent;
+	-webkit-text-stroke: 1px rgba(226, 228, 233, 0.09);
+	pointer-events: none;
+	user-select: none;
+}
+
+/* ==========================================================================
+   07 Slide 02 — Cambio Cerradura
+   ========================================================================== */
+
+.cc-slide--lock {
+	background:
+		linear-gradient(90deg, rgba(30, 32, 36, 0.65) 0%, rgba(30, 32, 36, 0) 58%);
+}
+
+.cc-slide--lock .cc-split__text {
+	padding-top: 0.5rem;
+}
+
+.cc-slide--lock .cc-split__media .wp-block-image {
+	margin-bottom: 2.5rem !important;
+}
+
+/* ==========================================================================
+   08 Slide 03 — Instalación de Cerrojos de Seguridad
+   ========================================================================== */
+
+.cc-slide--bolt {
+	background:
+		repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.018) 0 1px, transparent 1px 4px),
+		linear-gradient(180deg, var(--cc-titanium) 0%, #15171a 100%);
+}
+
+.cc-bolt__kicker {
+	grid-column: 1 / -1;
+	grid-row: 1;
+}
+
+.cc-bolt__title {
+	grid-column: 1 / -1;
+	grid-row: 2;
+	max-width: 15ch;
+	font-size: min(clamp(2.5rem, 1.25rem + 5vw, 6.5rem), 8cqi) !important;
+	position: relative;
+	padding-bottom: 1.4rem;
+}
+
+/* A copper "throw" line under the title, like a bolt leaving its case. */
+.cc-bolt__title::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: clamp(6rem, 22vw, 18rem);
+	height: 6px;
+	background: linear-gradient(90deg, var(--cc-steel) 0 70%, var(--cc-copper) 70% 100%);
+	border-radius: 0 3px 3px 0;
+}
+
+.cc-bolt__text {
+	grid-column: 1 / span 5;
+	grid-row: 3;
+	display: flex;
+	flex-direction: column;
+	gap: 1.25rem;
+}
+
+.cc-bolt__text > * {
+	margin: 0 !important;
+}
+
+.cc-bolt__figure {
+	grid-column: 7 / -1;
+	grid-row: 3 / span 2;
+	align-self: start;
+	margin-bottom: 2.5rem !important;
+}
+
+.cc-bolt__sheet {
+	grid-column: 1 / span 5;
+	grid-row: 4;
+}
+
+.cc-bolt__cta {
+	grid-column: 1 / span 6;
+	grid-row: 5;
+}
+
+/* Bolt bars list */
+.wp-block-list.is-style-bolts {
+	list-style: none;
+	margin: 0.5rem 0 0;
+	padding: 0;
+	counter-reset: cc-bolt;
+	display: flex;
+	flex-direction: column;
+	gap: 0.55rem;
+}
+
+.wp-block-list.is-style-bolts > li {
+	position: relative;
+	padding: 0.8rem 2.6rem 0.8rem 3.1rem;
+	background:
+		linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 45%, rgba(0, 0, 0, 0.25) 100%),
+		var(--cc-steel);
+	border-radius: 0 999px 999px 0;
+	color: var(--cc-silver);
+	font-weight: 500;
+	line-height: 1.35;
+	counter-increment: cc-bolt;
+	box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.5), 0 10px 20px -14px rgba(0, 0, 0, 0.9);
+}
+
+.wp-block-list.is-style-bolts > li:nth-child(1) { width: 94%; }
+.wp-block-list.is-style-bolts > li:nth-child(2) { width: 84%; }
+.wp-block-list.is-style-bolts > li:nth-child(3) { width: 100%; }
+
+.wp-block-list.is-style-bolts > li::before {
+	content: counter(cc-bolt, decimal-leading-zero) / "";
+	position: absolute;
+	left: 1rem;
+	top: 50%;
+	transform: translateY(-50%);
+	font-family: var(--cc-mono);
+	font-size: 0.75rem;
+	font-weight: 700;
+	color: var(--cc-muted);
+}
+
+.wp-block-list.is-style-bolts > li::after {
+	content: "";
+	position: absolute;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	width: 1.6rem;
+	background: linear-gradient(180deg, #f07a4c, var(--cc-copper) 50%, #8f3214);
+	border-radius: 0 999px 999px 0;
+}
+
+/* Spec sheet table */
+.wp-block-table.is-style-spec-sheet {
+	margin: 0;
+}
+
+.wp-block-table.is-style-spec-sheet table {
+	width: 100%;
+	border-collapse: collapse;
+	border-top: 2px solid var(--cc-copper);
+}
+
+.wp-block-table.is-style-spec-sheet th,
+.wp-block-table.is-style-spec-sheet td {
+	padding: 0.75rem 0;
+	border: 0 !important;
+	border-bottom: 1px solid var(--cc-line) !important;
+	border-radius: 0 !important;
+	background: transparent;
+	text-align: left;
+	vertical-align: top;
+}
+
+.wp-block-table.is-style-spec-sheet th {
+	width: 32%;
+	padding-right: 1rem;
+	font-family: var(--cc-mono);
+	font-size: 0.6875rem;
+	font-weight: 400;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--cc-faint);
+}
+
+.wp-block-table.is-style-spec-sheet td {
+	color: var(--cc-silver);
+}
+
+.wp-block-table.is-style-spec-sheet td a {
+	color: var(--cc-silver);
+	font-weight: 600;
+	text-decoration-color: var(--cc-copper);
+}
+
+.wp-block-table.is-style-spec-sheet td a:hover {
+	color: var(--cc-copper);
+}
+
+/* ==========================================================================
+   09 Slide 04 — Reparación de Cierres Metálicos
+   ========================================================================== */
+
+.cc-slide--shutter {
+	justify-content: flex-start;
+	padding-top: 0;
+	gap: clamp(2.5rem, 6vh, 4.5rem);
+}
+
+/* The heading band is a shutter: slats, a bottom bar and a copper edge. */
+.cc-shutter-sign {
+	position: relative;
+	isolation: isolate;
+	overflow: hidden;
+	padding-block: clamp(3.5rem, 11vh, 7rem) clamp(2rem, 5vh, 3.5rem) !important;
+	border-bottom: 3px solid var(--cc-copper);
+	box-shadow: 0 1px 0 rgba(0, 0, 0, 0.6), 0 24px 40px -24px rgba(0, 0, 0, 0.9);
+}
+
+.cc-shutter-sign::before {
+	content: "";
+	position: absolute;
+	inset: -40% 0 0;
+	z-index: -1;
+	background:
+		linear-gradient(180deg, rgba(10, 10, 12, 0.15) 0%, rgba(10, 10, 12, 0.7) 100%),
+		repeating-linear-gradient(180deg,
+			#454b55 0, #454b55 1px,
+			#353a43 1px, #2d3139 9px,
+			#24272d 15px, #191b1f 21px,
+			#0e0f11 21px, #0e0f11 22px);
+}
+
+.cc-shutter-sign::after {
+	content: "";
+	position: absolute;
+	left: 50%;
+	bottom: 0.6rem;
+	width: 2.75rem;
+	height: 0.9rem;
+	margin-left: -1.375rem;
+	border: 1px solid rgba(226, 228, 233, 0.35);
+	background: var(--cc-titanium);
+}
+
+.cc-shutter-sign__inner {
+	display: flex;
+	flex-direction: column;
+	gap: 1.25rem;
+}
+
+.cc-shutter-sign__inner > * {
+	margin: 0 !important;
+}
+
+.cc-shutter-sign .cc-slide__title {
+	max-width: 13ch;
+	text-shadow: 0 2px 0 rgba(0, 0, 0, 0.55), 0 20px 40px rgba(0, 0, 0, 0.6);
+}
+
+.cc-shutter-sign .cc-kicker {
+	color: var(--cc-muted);
+}
+
+.cc-split--shutter .cc-split__text {
+	grid-column: 1 / span 5;
+	grid-row: 1;
+}
+
+.cc-split--shutter .cc-split__media {
+	grid-column: 7 / -1;
+	grid-row: 1;
+	padding-bottom: 2.5rem;
+}
+
+/* ==========================================================================
+   10 Slide 05 — Quiénes somos + FAQ
+   ========================================================================== */
+
+.cc-slide--about {
+	background:
+		radial-gradient(50% 60% at 100% 0%, rgba(45, 49, 57, 0.45), transparent 70%);
+}
+
+.cc-about__kicker {
+	grid-column: 1 / -1;
+	grid-row: 1;
+}
+
+.cc-about__title {
+	grid-column: 1 / span 9;
+	grid-row: 2;
+	font-size: min(clamp(2.5rem, 1.25rem + 5vw, 6.5rem), 8cqi) !important;
+}
+
+.cc-about__seal {
+	grid-column: 10 / -1;
+	grid-row: 1 / span 3;
+	justify-self: end;
+	width: clamp(7rem, 14vw, 13rem);
+	margin: 0 !important;
+}
+
+.cc-about__statement {
+	grid-column: 1 / span 10;
+	grid-row: 3;
+	font-family: var(--cc-display);
+	font-size: clamp(1.6rem, 0.9rem + 2.4vw, 3.25rem);
+	font-weight: 700;
+	line-height: 1.12;
+	letter-spacing: -0.02em;
+	color: var(--cc-silver);
+}
+
+.cc-about__statement em {
+	font-style: normal;
+	color: var(--cc-copper);
+	background: linear-gradient(transparent 92%, rgba(217, 83, 37, 0.45) 92%);
+}
+
+.cc-about__body {
+	grid-column: 1 / span 5;
+	grid-row: 4;
+	display: flex;
+	flex-direction: column;
+	gap: 1.25rem;
+	padding-top: 1.5rem;
+	border-top: 1px solid var(--cc-line-strong);
+	color: var(--cc-muted);
+}
+
+.cc-about__body > * {
+	margin: 0 !important;
+}
+
+.cc-about__faq {
+	grid-column: 7 / -1;
+	grid-row: 4;
+	padding-top: 1.5rem;
+	border-top: 1px solid var(--cc-line-strong);
+}
+
+.has-drop-cap:not(:focus)::first-letter {
+	float: left;
+	margin: 0.06em 0.12em 0 0;
+	font-family: var(--cc-display);
+	font-size: 4.2em;
+	font-weight: 800;
+	line-height: 0.78;
+	color: var(--cc-copper);
+}
+
+/* FAQ */
+.cc-faq {
+	counter-reset: cc-faq;
+}
+
+.cc-faq > * {
+	margin-block: 0 !important;
+}
+
+.cc-faq__title {
+	margin-bottom: 1rem !important;
+	font-family: var(--cc-mono);
+	font-size: 0.75rem;
+	font-weight: 700;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	color: var(--cc-faint);
+}
+
+.wp-block-details.is-style-faq-item {
+	border-bottom: 1px solid var(--cc-line);
+	counter-increment: cc-faq;
+}
+
+.wp-block-details.is-style-faq-item summary {
+	position: relative;
+	display: grid;
+	grid-template-columns: 2.6rem 1fr 1.5rem;
+	align-items: baseline;
+	padding: 1rem 0;
+	list-style: none;
+	cursor: pointer;
+	font-weight: 600;
+	font-size: 1.0625rem;
+	line-height: 1.4;
+	color: var(--cc-silver);
+	transition: color 0.2s ease;
+}
+
+.wp-block-details.is-style-faq-item summary::-webkit-details-marker {
+	display: none;
+}
+
+.wp-block-details.is-style-faq-item summary::before {
+	content: "Q." counter(cc-faq, decimal-leading-zero);
+	content: "Q." counter(cc-faq, decimal-leading-zero) / "";
+	font-family: var(--cc-mono);
+	font-size: 0.6875rem;
+	font-weight: 700;
+	color: var(--cc-copper);
+}
+
+.wp-block-details.is-style-faq-item summary::after {
+	content: "";
+	justify-self: end;
+	align-self: center;
+	width: 0.85rem;
+	height: 0.85rem;
+	background:
+		linear-gradient(currentColor, currentColor) center / 100% 1.5px no-repeat,
+		linear-gradient(currentColor, currentColor) center / 1.5px 100% no-repeat;
+	transition: transform 0.35s var(--cc-ease);
+	color: var(--cc-copper);
+}
+
+.wp-block-details.is-style-faq-item[open] summary::after {
+	transform: rotate(45deg);
+}
+
+.wp-block-details.is-style-faq-item summary:hover {
+	color: var(--cc-copper);
+}
+
+.wp-block-details.is-style-faq-item .cc-faq__answer,
+.wp-block-details.is-style-faq-item > p {
+	padding: 0 1.5rem 1.15rem 2.6rem;
+	color: var(--cc-muted);
+}
+
+.wp-block-details.is-style-faq-item .cc-faq__answer p {
+	margin: 0;
+}
+
+.wp-block-details.is-style-faq-item .cc-faq__answer p + p {
+	margin-top: 0.75rem;
+}
+
+/* ==========================================================================
+   11 Slide 06 — Últimas entradas
+   ========================================================================== */
+
+.cc-slide--posts {
+	background:
+		linear-gradient(180deg, var(--cc-titanium) 0%, rgba(30, 32, 36, 0.6) 100%);
+}
+
+.cc-posts__head {
+	grid-column: 1 / span 4;
+	display: flex;
+	flex-direction: column;
+	gap: 1.25rem;
+	position: sticky;
+	top: calc(var(--cc-header-h) + var(--cc-admin-bar) + 2rem);
+}
+
+.cc-posts__head > * {
+	margin: 0 !important;
+}
+
+.cc-posts__intro {
+	color: var(--cc-muted);
+	max-width: 28ch;
+}
+
+.cc-latest {
+	grid-column: 6 / -1;
+}
+
+.cc-latest__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	counter-reset: cc-post;
+	border-bottom: 1px solid var(--cc-line-strong);
+}
+
+.cc-latest__list > li {
+	counter-increment: cc-post;
+	margin: 0;
+}
+
+.cc-latest__item {
+	position: relative;
+	display: grid;
+	grid-template-columns: 3rem minmax(0, 1fr) auto;
+	grid-template-areas:
+		"num date thumb"
+		"num title thumb"
+		"num excerpt thumb";
+	column-gap: 1.25rem;
+	row-gap: 0.4rem;
+	padding: 1.6rem 0;
+	border-top: 1px solid var(--cc-line-strong);
+	transition: background-color 0.35s ease;
+}
+
+.cc-latest__item > * {
+	margin: 0 !important;
+}
+
+.cc-latest__item::before {
+	content: counter(cc-post, decimal-leading-zero) / "";
+	grid-area: num;
+	padding-top: 0.15rem;
+	font-family: var(--cc-mono);
+	font-size: 0.75rem;
+	font-weight: 700;
+	color: var(--cc-faint);
+	transition: color 0.3s ease;
+}
+
+.cc-latest__item:hover::before,
+.cc-latest__item:focus-within::before {
+	color: var(--cc-silver);
+}
+
+.cc-latest__item::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: -1px;
+	width: 100%;
+	height: 2px;
+	background: var(--cc-copper);
+	transform: scaleX(0);
+	transform-origin: left;
+	transition: transform 0.5s var(--cc-ease);
+}
+
+.cc-latest__item:hover::after,
+.cc-latest__item:focus-within::after {
+	transform: scaleX(1);
+}
+
+.cc-latest__date {
+	grid-area: date;
+}
+
+.cc-latest__title {
+	grid-area: title;
+	font-size: clamp(1.35rem, 1rem + 1.2vw, 2.1rem);
+	font-weight: 700;
+	line-height: 1.08;
+	letter-spacing: -0.02em;
+}
+
+.cc-latest__title a {
+	text-decoration: none;
+}
+
+/* Whole row clickable through the title link. */
+.cc-latest__title a::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+}
+
+.cc-latest__excerpt {
+	grid-area: excerpt;
+	max-width: 60ch;
+	font-size: 0.9375rem;
+}
+
+.cc-latest__excerpt p {
+	margin: 0;
+}
+
+.cc-latest__thumb {
+	grid-area: thumb;
+	width: clamp(6rem, 11vw, 9.5rem);
+	margin: 0;
+	overflow: hidden;
+}
+
+.cc-latest__thumb img {
+	filter: grayscale(1) contrast(1.05);
+	transition: filter 0.5s ease, transform 0.6s var(--cc-ease);
+}
+
+.cc-latest__item:hover .cc-latest__thumb img {
+	filter: none;
+	transform: scale(1.04);
+}
+
+.cc-latest__empty {
+	padding: 1.5rem 0;
+	border-top: 1px solid var(--cc-line-strong);
+	color: var(--cc-muted);
+}
+
+/* ==========================================================================
+   12 Slide 07 — Contacto
+   ========================================================================== */
+
+.cc-slide--contact {
+	background:
+		radial-gradient(55% 55% at 20% 70%, rgba(217, 83, 37, 0.13), transparent 70%),
+		var(--cc-charcoal);
+}
+
+/* Crosshair converging on the phone number. */
+.cc-slide--contact::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	background:
+		linear-gradient(var(--cc-line), var(--cc-line)) 0 62% / 100% 1px no-repeat,
+		linear-gradient(var(--cc-line), var(--cc-line)) 50% 0 / 1px 100% no-repeat;
+	pointer-events: none;
+}
+
+.cc-contact > .cc-kicker {
+	grid-column: 1 / -1;
+}
+
+.cc-contact__title {
+	grid-column: 1 / span 6;
+	font-size: min(clamp(2.5rem, 1.25rem + 5vw, 6.5rem), 5.6cqi) !important;
+}
+
+.cc-contact__lead {
+	grid-column: 7 / -1;
+	align-self: end;
+	max-width: 30ch;
+	color: var(--cc-muted);
+}
+
+.cc-contact__phone {
+	grid-column: 1 / -1;
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+	margin-top: clamp(1rem, 4vh, 3rem) !important;
+}
+
+.cc-contact__phone > * {
+	margin: 0 !important;
+}
+
+.cc-contact__phone .wp-block-buttons {
+	display: block;
+}
+
+.wp-block-button.cc-contact__number {
+	display: block;
+	width: 100%;
+}
+
+.wp-block-button.is-style-call.cc-contact__number .wp-block-button__link {
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
+	padding: clamp(1rem, 2.4vw, 2rem) clamp(1.25rem, 3vw, 2.75rem);
+	font-family: var(--cc-display);
+	font-size: clamp(2rem, 0.6rem + 6.4vw, 8.25rem);
+	font-size: min(8.25rem, 6.4cqi);
+	font-weight: 800;
+	letter-spacing: -0.03em;
+	line-height: 0.95;
+	clip-path: polygon(0 0, calc(100% - 2.5rem) 0, 100% 2.5rem, 100% 100%, 2.5rem 100%, 0 calc(100% - 2.5rem));
+	background:
+		linear-gradient(115deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 35%),
+		var(--cc-copper);
+}
+
+.wp-block-button.is-style-call.cc-contact__number .wp-block-button__link::before {
+	order: 2;
+	width: 0.55em;
+	height: 0.55em;
+}
+
+.wp-block-button.is-style-call.cc-contact__number .wp-block-button__link:hover,
+.wp-block-button.is-style-call.cc-contact__number .wp-block-button__link:focus-visible {
+	background: var(--cc-silver);
+}
+
+.cc-contact__address {
+	grid-column: 1 / span 6;
+	display: flex;
+	flex-direction: column;
+	gap: 0.6rem;
+	padding-top: 1.25rem;
+	border-top: 1px solid var(--cc-line-strong);
+}
+
+.cc-contact__address > * {
+	margin: 0 !important;
+}
+
+.cc-contact__street {
+	font-family: var(--cc-display);
+	font-size: clamp(1.3rem, 1rem + 1.2vw, 2rem);
+	font-weight: 700;
+	line-height: 1.15;
+	letter-spacing: -0.01em;
+}
+
+.cc-contact__landmark {
+	color: var(--cc-muted);
+}
+
+.cc-contact__landmark::before {
+	content: "";
+	display: inline-block;
+	width: 0.55rem;
+	height: 0.55rem;
+	margin-right: 0.6rem;
+	border: 2px solid var(--cc-copper);
+	border-radius: 50%;
+	vertical-align: 0.05em;
+}
+
+/* ==========================================================================
+   13 Deck index (fixed 01–07 navigation on the front page)
+   ========================================================================== */
+
+nav.cc-deck-index {
+	position: fixed;
+	right: clamp(0.75rem, 1.6vw, 1.75rem);
+	top: 50%;
+	z-index: 40;
+	transform: translateY(-50%);
+	margin: 0 !important;
+	counter-reset: cc-deck;
+}
+
+nav.cc-deck-index .wp-block-navigation__container {
+	gap: 0.15rem;
+	align-items: flex-end;
+}
+
+nav.cc-deck-index .wp-block-navigation-item {
+	counter-increment: cc-deck;
+}
+
+nav.cc-deck-index .wp-block-navigation-item__content {
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+	padding: 0.3rem 0 !important;
+	font-family: var(--cc-mono);
+	font-size: 0.6875rem;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: var(--cc-faint);
+}
+
+nav.cc-deck-index .wp-block-navigation-item__label {
+	opacity: 0;
+	transform: translateX(0.5rem);
+	transition: opacity 0.3s ease, transform 0.3s var(--cc-ease);
+	white-space: nowrap;
+	background: rgba(10, 10, 12, 0.85);
+	padding: 0.15rem 0.35rem;
+}
+
+nav.cc-deck-index .wp-block-navigation-item__content::after {
+	content: counter(cc-deck, decimal-leading-zero) / "";
+	order: 2;
+	font-weight: 700;
+}
+
+nav.cc-deck-index .wp-block-navigation-item__content::before {
+	content: "";
+	order: 3;
+	width: 1rem;
+	height: 1px;
+	background: currentColor;
+	transition: width 0.35s var(--cc-ease), background-color 0.3s ease;
+}
+
+/* Labels appear on hover/focus only, so the index never covers content. */
+nav.cc-deck-index .wp-block-navigation-item__content:hover .wp-block-navigation-item__label,
+nav.cc-deck-index .wp-block-navigation-item__content:focus-visible .wp-block-navigation-item__label {
+	opacity: 1;
+	transform: none;
+}
+
+nav.cc-deck-index .wp-block-navigation-item__content:hover,
+nav.cc-deck-index .is-active .wp-block-navigation-item__content {
+	color: var(--cc-silver);
+}
+
+nav.cc-deck-index .is-active .wp-block-navigation-item__content::before {
+	width: 2.25rem;
+	background: var(--cc-copper);
+	height: 2px;
+}
+
+nav.cc-deck-index .is-active .wp-block-navigation-item__content::after {
+	color: var(--cc-copper);
+}
+
+/* ==========================================================================
+   14 Footer and mobile call bar
+   ========================================================================== */
+
+.cc-footer {
+	margin-block: 0 !important;
+	padding-block: clamp(3.5rem, 9vh, 6rem) 1.75rem;
+	border-top: 1px solid var(--cc-line-strong);
+	background:
+		linear-gradient(180deg, rgba(30, 32, 36, 0.55), rgba(10, 10, 12, 0) 60%),
+		#070708;
+	font-size: 0.9375rem;
+	color: var(--cc-muted);
+}
+
+.cc-footer__grid {
+	display: grid;
+	grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr));
+	gap: 2.5rem clamp(1.5rem, 3vw, 3rem);
+}
+
+.cc-footer__grid > *,
+.cc-footer__base > * {
+	margin: 0 !important;
+}
+
+.cc-footer__grid > div {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+}
+
+.cc-footer__grid > div > * {
+	margin: 0 !important;
+}
+
+.cc-footer__name {
+	font-family: var(--cc-display);
+	font-size: clamp(1.6rem, 1.1rem + 1.6vw, 2.4rem);
+	font-weight: 800;
+	line-height: 1;
+	letter-spacing: -0.03em;
+	color: var(--cc-silver);
+}
+
+.cc-footer__tagline {
+	max-width: 34ch;
+}
+
+.cc-footer__phone a {
+	font-family: var(--cc-display);
+	font-size: 1.25rem;
+	font-weight: 700;
+	color: var(--cc-copper);
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.cc-footer__phone a:hover {
+	color: var(--cc-silver);
+}
+
+nav.cc-nav-footer .wp-block-navigation__container {
+	gap: 0.4rem;
+}
+
+nav.cc-nav-footer .wp-block-navigation-item__content {
+	color: var(--cc-muted);
+	font-size: 0.9375rem;
+	font-weight: 400;
+}
+
+nav.cc-nav-footer .wp-block-navigation-item__content:hover {
+	color: var(--cc-copper);
+}
+
+.cc-footer__base {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	gap: 0.75rem 2rem;
+	margin-top: clamp(2.5rem, 6vh, 4rem) !important;
+	padding-top: 1.25rem;
+	border-top: 1px solid var(--cc-line);
+	font-family: var(--cc-mono);
+	font-size: 0.75rem;
+	letter-spacing: 0.06em;
+	color: var(--cc-faint);
+}
+
+.cc-footer__credit a {
+	color: var(--cc-silver);
+	text-decoration-color: var(--cc-copper);
+}
+
+.cc-footer__credit a:hover {
+	color: var(--cc-copper);
+}
+
+.wp-block-buttons.cc-mobile-call {
+	display: none;
+}
+
+/* ==========================================================================
+   15 Blog, posts, pages, 404
+   ========================================================================== */
+
+.cc-blog,
+.cc-single,
+.cc-page,
+.cc-main-404 {
+	padding-bottom: clamp(4rem, 10vh, 7rem);
+}
+
+.cc-masthead {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 1.1rem;
+	margin-top: 0 !important;
+	padding-block: clamp(2.5rem, 8vh, 5.5rem) clamp(2rem, 5vh, 3.5rem);
+	border-bottom: 1px solid var(--cc-line-strong);
+}
+
+.cc-masthead > * {
+	margin: 0 !important;
+}
+
+.cc-masthead::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	bottom: -2px;
+	width: clamp(4rem, 12vw, 9rem);
+	height: 3px;
+	background: var(--cc-copper);
+}
+
+.cc-masthead__title {
+	max-width: 18ch;
+	font-size: clamp(2.6rem, 1.2rem + 5.4vw, 7rem);
+	font-weight: 800;
+	line-height: 0.92;
+	letter-spacing: -0.04em;
+}
+
+.cc-masthead__intro {
+	max-width: 52ch;
+	font-size: var(--wp--preset--font-size--large);
+	color: var(--cc-muted);
+}
+
+.cc-masthead .wp-block-search {
+	max-width: 36rem;
+}
+
+/* Breadcrumbs */
+.cc-breadcrumbs__list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.25rem 0.6rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	font-family: var(--cc-mono);
+	font-size: 0.6875rem;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: var(--cc-faint);
+}
+
+.cc-breadcrumbs__item + .cc-breadcrumbs__item::before {
+	content: "/";
+	content: "/" / "";
+	margin-right: 0.6rem;
+	color: var(--cc-copper);
+}
+
+.cc-breadcrumbs a {
+	color: var(--cc-muted);
+	text-decoration: none;
+}
+
+.cc-breadcrumbs a:hover {
+	color: var(--cc-copper);
+	text-decoration: underline;
+}
+
+.cc-breadcrumbs [aria-current] {
+	color: var(--cc-silver);
+	display: inline-block;
+	max-width: 40ch;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	vertical-align: bottom;
+}
+
+/* Post list (blog, archives, search) */
+.cc-postlist__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.cc-postlist__list > li {
+	margin: 0;
+}
+
+.cc-postlist__item {
+	position: relative;
+	display: flex;
+	gap: clamp(1.25rem, 3vw, 3rem);
+	align-items: flex-start;
+	padding-block: clamp(1.75rem, 4vh, 2.75rem);
+	border-bottom: 1px solid var(--cc-line);
+}
+
+.cc-postlist__item > * {
+	margin: 0 !important;
+}
+
+.cc-postlist__thumb {
+	flex: 0 0 min(34%, 22rem);
+	overflow: hidden;
+	border: 1px solid var(--cc-line);
+}
+
+.cc-postlist__thumb img {
+	display: block;
+	filter: grayscale(0.85) contrast(1.05);
+	transition: filter 0.5s ease, transform 0.7s var(--cc-ease);
+}
+
+.cc-postlist__item:hover .cc-postlist__thumb img {
+	filter: none;
+	transform: scale(1.03);
+}
+
+.cc-postlist__body {
+	flex: 1 1 auto;
+	display: flex;
+	flex-direction: column;
+	gap: 0.85rem;
+	min-width: 0;
+}
+
+.cc-postlist__body > * {
+	margin: 0 !important;
+}
+
+.cc-postlist__meta,
+.cc-article__meta {
+	gap: 0.4rem 1.25rem !important;
+}
+
+.cc-postlist__meta .wp-block-post-terms a,
+.cc-article__meta .wp-block-post-terms a {
+	color: var(--cc-copper);
+}
+
+.cc-postlist__title {
+	font-size: clamp(1.5rem, 1rem + 1.8vw, 2.6rem);
+	font-weight: 700;
+	line-height: 1.05;
+	letter-spacing: -0.025em;
+}
+
+.cc-postlist__title a {
+	text-decoration: none;
+	background: linear-gradient(var(--cc-copper), var(--cc-copper)) 0 100% / 0 2px no-repeat;
+	transition: background-size 0.5s var(--cc-ease), color 0.2s ease;
+}
+
+.cc-postlist__title a:hover,
+.cc-postlist__title a:focus-visible {
+	background-size: 100% 2px;
+}
+
+.cc-postlist__excerpt {
+	max-width: 62ch;
+}
+
+.cc-postlist__excerpt p {
+	margin: 0;
+}
+
+.cc-postlist__empty {
+	padding-block: 2rem;
+	color: var(--cc-muted);
+}
+
+/* Pagination */
+.cc-pagination {
+	margin-top: clamp(2rem, 5vh, 3.5rem) !important;
+	gap: 1rem;
+}
+
+.cc-pagination .wp-block-query-pagination-previous,
+.cc-pagination .wp-block-query-pagination-next {
+	padding: 0.75rem 1rem;
+	border: 1px solid var(--cc-line-strong);
+	border-radius: 0;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	font-size: 0.75rem;
+}
+
+.cc-pagination .wp-block-query-pagination-previous:hover,
+.cc-pagination .wp-block-query-pagination-next:hover {
+	border-color: var(--cc-copper);
+}
+
+.cc-pagination .wp-block-query-pagination-numbers {
+	display: flex;
+	gap: 0.35rem !important;
+	margin: 0 !important;
+}
+
+.cc-pagination .page-numbers {
+	display: inline-grid;
+	place-items: center;
+	min-width: 2.5rem;
+	height: 2.5rem;
+	padding: 0 0.5rem;
+	border: 1px solid transparent;
+}
+
+.cc-pagination .page-numbers.current {
+	border-color: var(--cc-copper);
+	color: var(--cc-copper);
+}
+
+.cc-pagination a.page-numbers:hover {
+	border-color: var(--cc-line-strong);
+}
+
+/* Single post and page */
+.cc-article__head {
+	padding-bottom: clamp(1.5rem, 4vh, 2.5rem);
+}
+
+.cc-article__title {
+	max-width: 16em;
+	font-size: clamp(2.1rem, 1.1rem + 3vw, 4.5rem);
+	line-height: 0.98;
+}
+
+.cc-article__image,
+.cc-page__image {
+	margin-top: clamp(2rem, 5vh, 3rem) !important;
+}
+
+.cc-article__image img,
+.cc-page__image img {
+	width: 100%;
+	border: 1px solid var(--cc-line);
+}
+
+.cc-article__content,
+.cc-page__content {
+	margin-top: clamp(2rem, 5vh, 3.5rem) !important;
+	font-size: 1.125rem;
+	line-height: 1.75;
+}
+
+.cc-article__content > * + *,
+.cc-page__content > * + * {
+	margin-block-start: 1.4em;
+}
+
+.cc-article__content :where(h2, h3, h4),
+.cc-page__content :where(h2, h3, h4) {
+	margin-block-start: 2.2em;
+	margin-block-end: 0.4em;
+}
+
+.cc-article__content h2,
+.cc-page__content h2 {
+	font-size: clamp(1.6rem, 1.1rem + 1.6vw, 2.4rem);
+	font-weight: 700;
+	letter-spacing: -0.02em;
+}
+
+.cc-article__content a,
+.cc-page__content a {
+	color: var(--cc-silver);
+	text-decoration-color: var(--cc-copper);
+}
+
+.cc-article__content a:hover,
+.cc-page__content a:hover {
+	color: var(--cc-copper);
+}
+
+.cc-article__content :where(ul, ol):not(.is-style-index):not(.is-style-bolts) li::marker {
+	color: var(--cc-copper);
+}
+
+.cc-article__tags {
+	margin-top: 2.5rem !important;
+}
+
+/* Prime FSE styles tags as rounded pills; square them. */
+.wp-block-post-terms.taxonomy-post_tag a {
+	border-radius: 0;
+	padding: 0.35rem 0.75rem;
+	margin-right: 0.5rem;
+	border-color: var(--cc-line-strong);
+}
+
+.wp-block-quote {
+	border: 0;
+	border-left: 2px solid var(--cc-copper);
+	padding-top: 0;
+	padding-left: 1.5rem;
+	font-family: var(--cc-display);
+	font-weight: 600;
+	letter-spacing: -0.01em;
+}
+
+.wp-block-quote::after {
+	display: none !important;
+}
+
+.wp-block-quote cite {
+	color: var(--cc-faint);
+}
+
+.wp-block-table table {
+	border-color: var(--cc-line-strong);
+}
+
+.wp-block-table th,
+.wp-block-table td {
+	border-radius: 0 !important;
+}
+
+.wp-block-table th {
+	background: var(--cc-titanium);
+	color: var(--cc-silver);
+	font-weight: 600;
+}
+
+/* CTA band, used after posts */
+.cc-cta-band {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	align-items: end;
+	gap: 0.75rem 2rem;
+	margin-block: clamp(3rem, 8vh, 5rem) !important;
+	padding: clamp(1.75rem, 4vw, 3rem);
+	background:
+		linear-gradient(90deg, var(--cc-copper) 0 4px, transparent 4px),
+		repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.02) 0 1px, transparent 1px 4px),
+		var(--cc-titanium);
+	clip-path: polygon(0 0, calc(100% - 1.75rem) 0, 100% 1.75rem, 100% 100%, 0 100%);
+}
+
+.cc-cta-band > * {
+	margin: 0 !important;
+	grid-column: 1;
+}
+
+.cc-cta-band__title {
+	font-family: var(--cc-display);
+	font-size: clamp(1.6rem, 1rem + 2vw, 2.75rem);
+	font-weight: 800;
+	line-height: 1;
+	letter-spacing: -0.03em;
+	color: var(--cc-silver);
+}
+
+.cc-cta-band__text {
+	max-width: 52ch;
+	color: var(--cc-muted);
+}
+
+.cc-cta-band__buttons {
+	grid-column: 2 !important;
+	grid-row: 1 / span 3;
+	align-self: end;
+}
+
+/* Post navigation */
+.cc-postnav {
+	gap: 1.5rem !important;
+	padding-block: 1.5rem;
+	border-top: 1px solid var(--cc-line);
+	border-bottom: 1px solid var(--cc-line);
+}
+
+.cc-postnav .wp-block-post-navigation-link {
+	max-width: 46%;
+}
+
+.cc-postnav .post-navigation-link__label {
+	display: block;
+	margin-bottom: 0.3rem;
+	font-family: var(--cc-mono);
+	font-size: 0.6875rem;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: var(--cc-faint);
+}
+
+.cc-postnav .post-navigation-link__title {
+	font-family: var(--cc-display);
+	font-weight: 700;
+	font-size: 1.125rem;
+	line-height: 1.2;
+}
+
+.cc-postnav .wp-block-post-navigation-link__arrow-previous,
+.cc-postnav .wp-block-post-navigation-link__arrow-next {
+	color: var(--cc-copper);
+}
+
+/* Comments */
+.cc-comments {
+	margin-top: clamp(2.5rem, 6vh, 4rem) !important;
+}
+
+.cc-comment {
+	padding-block: 1.25rem;
+	border-top: 1px solid var(--cc-line);
+}
+
+.cc-comment__meta {
+	gap: 0.3rem 1rem !important;
+	font-size: 0.875rem;
+}
+
+.wp-block-comment-date,
+.wp-block-comment-reply-link {
+	font-family: var(--cc-mono);
+	font-size: 0.75rem;
+	letter-spacing: 0.08em;
+	color: var(--cc-faint);
+}
+
+/* Search block */
+.wp-block-search__inside-wrapper {
+	border-color: var(--cc-line-strong) !important;
+	background: var(--cc-titanium);
+	border-radius: 0 !important;
+}
+
+.wp-block-search__input {
+	background: transparent;
+	border: 1px solid var(--cc-line-strong);
+	color: var(--cc-silver);
+	padding: 0.85rem 1rem;
+}
+
+.wp-block-search__button {
+	margin-left: 0 !important;
+	border-radius: 0;
+}
+
+/* Sidebar part (available in the Site Editor) */
+.cc-recent {
+	padding: 0;
+	list-style: none;
+}
+
+/* 404 */
+.cc-404 {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+	min-height: calc(70svh - var(--cc-header-h));
+	justify-content: center;
+	padding-block: clamp(3rem, 10vh, 7rem);
+}
+
+.cc-404 > * {
+	margin: 0 !important;
+}
+
+.cc-404::after {
+	content: "404";
+	content: "404" / "";
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	z-index: -1;
+	font-family: var(--cc-display);
+	font-size: clamp(9rem, 30vw, 28rem);
+	font-weight: 800;
+	line-height: 0.8;
+	color: transparent;
+	-webkit-text-stroke: 1px rgba(226, 228, 233, 0.08);
+	pointer-events: none;
+}
+
+.cc-404__title {
+	max-width: 14ch;
+	font-size: clamp(2.4rem, 1.2rem + 5vw, 6.5rem);
+	line-height: 0.92;
+	letter-spacing: -0.04em;
+}
+
+.cc-404 .wp-block-search {
+	max-width: 32rem;
+}
+
+/* ==========================================================================
+   16 Motion: reveals, scroll-driven effects, cursor
+   Everything here is progressive: without JS or with reduced motion the
+   content is simply visible.
+   ========================================================================== */
+
+@keyframes cc-pulse {
+	0%, 100% { opacity: 1; }
+	50% { opacity: 0.25; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html {
+		scroll-behavior: smooth;
+	}
+
+	/* theme.js adds .cc-motion after marking the elements already in view. */
+	.cc-motion .cc-reveal {
+		transition: opacity 0.9s var(--cc-ease), transform 0.9s var(--cc-ease), clip-path 1.1s var(--cc-ease);
+	}
+
+	.cc-motion .cc-reveal:not(.is-visible) {
+		opacity: 0;
+		transform: translateY(1.75rem);
+	}
+
+	.cc-motion .cc-slide__title.cc-reveal:not(.is-visible) {
+		opacity: 1;
+		transform: none;
+		clip-path: inset(-0.4em 100% -0.4em 0);
+	}
+
+	.cc-motion .cc-slide__title.cc-reveal.is-visible {
+		clip-path: inset(-0.4em -1em -0.4em 0);
+	}
+
+	/* Bolt bars slide out like a throw. */
+	.cc-motion .is-style-bolts.cc-reveal:not(.is-visible) {
+		opacity: 1;
+		transform: none;
+	}
+
+	.cc-motion .is-style-bolts.cc-reveal > li {
+		transition: transform 0.9s var(--cc-ease), opacity 0.6s ease;
+	}
+
+	.cc-motion .is-style-bolts.cc-reveal > li:nth-child(2) { transition-delay: 0.12s; }
+	.cc-motion .is-style-bolts.cc-reveal > li:nth-child(3) { transition-delay: 0.24s; }
+
+	.cc-motion .is-style-bolts.cc-reveal:not(.is-visible) > li {
+		opacity: 0;
+		transform: translateX(-30%);
+	}
+
+	.cc-motion .is-style-index.cc-reveal:not(.is-visible) {
+		transform: none;
+	}
+
+	.cc-motion .is-style-index.cc-reveal > li {
+		transition: opacity 0.7s ease, transform 0.7s var(--cc-ease);
+	}
+
+	.cc-motion .is-style-index.cc-reveal > li:nth-child(2) { transition-delay: 0.08s; }
+	.cc-motion .is-style-index.cc-reveal > li:nth-child(3) { transition-delay: 0.16s; }
+	.cc-motion .is-style-index.cc-reveal > li:nth-child(4) { transition-delay: 0.24s; }
+
+	.cc-motion .is-style-index.cc-reveal:not(.is-visible) > li {
+		opacity: 0;
+		transform: translateX(1rem);
+	}
+
+	/* Scroll-driven typography and textures (Chromium, Safari 26+). */
+	@supports (animation-timeline: view()) {
+		.cc-marquee {
+			animation: cc-drift linear both;
+			animation-timeline: scroll(root block);
+			animation-range: 0 120vh;
+		}
+
+		.cc-slide::after {
+			animation: cc-rise linear both;
+			animation-timeline: view();
+		}
+
+		.cc-shutter-sign::before {
+			animation: cc-roll linear both;
+			animation-timeline: view();
+			animation-range: entry 10% cover 60%;
+		}
+
+		.cc-hero__figure img {
+			animation: cc-turn linear both;
+			animation-timeline: scroll(root block);
+			animation-range: 0 100vh;
+		}
+	}
+}
+
+@keyframes cc-drift {
+	from { transform: translateX(0); }
+	to { transform: translateX(-28%); }
+}
+
+@keyframes cc-rise {
+	from { transform: translateY(12%); }
+	to { transform: translateY(-12%); }
+}
+
+@keyframes cc-roll {
+	from { transform: translateY(0); }
+	to { transform: translateY(-22%); }
+}
+
+@keyframes cc-turn {
+	from { transform: rotate(0deg) scale(1); }
+	to { transform: rotate(-24deg) scale(0.94); }
+}
+
+/* Copper cursor ring: only created by theme.js for fine pointers. */
+.cc-cursor {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 9999;
+	width: 2.25rem;
+	height: 2.25rem;
+	margin: -1.125rem 0 0 -1.125rem;
+	border: 1px solid var(--cc-copper);
+	border-radius: 50%;
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity 0.3s ease, width 0.3s var(--cc-ease), height 0.3s var(--cc-ease), margin 0.3s var(--cc-ease), background-color 0.3s ease;
+	will-change: transform;
+}
+
+.cc-cursor.is-visible {
+	opacity: 0.85;
+}
+
+.cc-cursor.is-hover {
+	width: 3.5rem;
+	height: 3.5rem;
+	margin: -1.75rem 0 0 -1.75rem;
+	background-color: rgba(217, 83, 37, 0.1);
+}
+
+/* ==========================================================================
+   17 Responsive
+   ========================================================================== */
+
+/* Presentation mode: snap to slides on large screens. Proximity snapping
+   never traps the visitor, and tall slides scroll freely. */
+@media (min-width: 1024px) and (min-height: 680px) and (prefers-reduced-motion: no-preference) {
+	html:has(.cc-deck) {
+		scroll-snap-type: y proximity;
+	}
+
+	.cc-deck > .cc-slide {
+		scroll-snap-align: start;
+	}
+}
+
+/* Leave a lane on the right for the fixed 01–07 index. */
+@media (min-width: 1280px) {
+	.cc-deck > .cc-slide > .alignwide,
+	.cc-shutter-sign > .alignwide {
+		max-width: min(var(--wp--style--global--wide-size, 1320px), calc(100% - 8rem)) !important;
+	}
+}
+
+@media (max-width: 1279px) {
+	nav.cc-deck-index {
+		display: none;
+	}
+}
+
+@media (max-width: 1100px) {
+	.cc-hero__lead {
+		grid-column: 1 / span 6;
+	}
+
+	.cc-hero__call {
+		grid-column: 7 / -1;
+	}
+
+	.cc-split--media-left .cc-split__media,
+	.cc-split--shutter .cc-split__media {
+		grid-column: 1 / -1;
+		grid-row: 2;
+	}
+
+	.cc-split--media-left .cc-split__text,
+	.cc-split--shutter .cc-split__text {
+		grid-column: 1 / -1;
+		grid-row: 1;
+	}
+
+	.cc-bolt__title { grid-column: 1 / -1; }
+	.cc-bolt__text { grid-column: 1 / span 6; }
+	.cc-bolt__figure { grid-column: 7 / -1; }
+	.cc-bolt__sheet { grid-column: 1 / span 6; }
+
+	.cc-about__body { grid-column: 1 / -1; }
+	.cc-about__faq { grid-column: 1 / -1; grid-row: 5; }
+
+	.cc-posts__head { grid-column: 1 / -1; position: static; }
+	.cc-latest { grid-column: 1 / -1; }
+
+	.cc-footer__grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 781px) {
+	:root {
+		--cc-header-h: 4rem;
+	}
+
+	nav.cc-nav-primary {
+		margin-inline-start: auto;
+	}
+
+	/* The fixed call bar and the hero plate carry the phone on phones. */
+	.wp-block-buttons.cc-header__call {
+		display: none;
+	}
+
+	.cc-bolt__title,
+	.cc-about__title,
+	.cc-contact__title {
+		font-size: min(clamp(2.5rem, 1.25rem + 5vw, 6.5rem), 10.4cqi) !important;
+	}
+
+	.cc-slide {
+		min-height: 0;
+		padding-block: clamp(3.5rem, 9vh, 5rem);
+	}
+
+	.cc-slide::after {
+		font-size: 11rem;
+		bottom: -0.05em;
+	}
+
+	.cc-split,
+	.cc-hero,
+	.cc-bolt,
+	.cc-about,
+	.cc-posts,
+	.cc-contact {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.cc-split > *,
+	.cc-hero > *,
+	.cc-bolt > *,
+	.cc-about > *,
+	.cc-posts > *,
+	.cc-contact > * {
+		grid-column: 1 / -1 !important;
+		grid-row: auto !important;
+	}
+
+	/* Hero: H1, summary and call button within the first screen. */
+	.cc-slide--hero {
+		min-height: calc(100svh - var(--cc-header-h) - var(--cc-admin-bar));
+		padding-block: 1.75rem 4.5rem;
+		justify-content: flex-start;
+	}
+
+	.cc-hero {
+		row-gap: 1.1rem;
+	}
+
+	.cc-hero__figure {
+		position: absolute;
+		top: -0.5rem;
+		right: calc(var(--cc-gutter) * -1.6);
+		width: 15rem;
+		opacity: 0.4;
+	}
+
+	.cc-hero__title {
+		font-size: min(4.6rem, 12.2cqi);
+		line-height: 0.9;
+	}
+
+	.cc-hero__title em {
+		padding-inline-start: 0;
+	}
+
+	.cc-hero__lead {
+		font-size: 1.0625rem;
+	}
+
+	.cc-agenda {
+		grid-template-columns: minmax(0, 1fr);
+		margin-top: 0.5rem !important;
+	}
+
+	.cc-agenda li,
+	.cc-agenda li + li {
+		border-right: 0;
+		border-bottom: 1px solid var(--cc-line);
+	}
+
+	.cc-agenda li + li a,
+	.cc-agenda a {
+		padding: 0.85rem 0;
+	}
+
+	.cc-bolt__figure,
+	.cc-split__media {
+		margin-bottom: 2.25rem !important;
+	}
+
+	.wp-block-list.is-style-bolts > li {
+		width: 100% !important;
+	}
+
+	.cc-about__seal {
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: 6.5rem;
+		opacity: 0.6;
+	}
+
+	.cc-shutter-sign {
+		padding-block: 3rem 2rem !important;
+	}
+
+	.cc-contact__phone .wp-block-button__link {
+		font-weight: 700 !important;
+		font-size: min(3rem, 9.2cqi) !important;
+		clip-path: polygon(0 0, calc(100% - 1.25rem) 0, 100% 1.25rem, 100% 100%, 1.25rem 100%, 0 calc(100% - 1.25rem)) !important;
+	}
+
+	.cc-latest__item {
+		grid-template-columns: 2.25rem minmax(0, 1fr);
+		grid-template-areas:
+			"num date"
+			"num title"
+			"num excerpt";
+	}
+
+	.cc-latest__thumb {
+		display: none;
+	}
+
+	.cc-postlist__item {
+		flex-direction: column;
+	}
+
+	.cc-postlist__thumb {
+		flex-basis: auto;
+		width: 100%;
+	}
+
+	.cc-cta-band {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.cc-cta-band__buttons {
+		grid-column: 1 !important;
+		grid-row: auto;
+	}
+
+	.cc-postnav .wp-block-post-navigation-link {
+		max-width: 100%;
+	}
+
+	.cc-footer__grid {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	/* Fixed call bar: hidden while another call button is on screen, and the
+	   footer gets extra room so the bar never covers the credits. */
+	.wp-block-buttons.cc-mobile-call {
+		position: fixed;
+		left: 0.75rem;
+		right: 0.75rem;
+		bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+		z-index: 60;
+		display: flex;
+		margin: 0 !important;
+		transition: transform 0.35s var(--cc-ease), opacity 0.35s ease, visibility 0s linear 0s;
+	}
+
+	.cc-mobile-call .wp-block-button {
+		flex: 1 1 auto;
+		margin: 0;
+	}
+
+	.cc-mobile-call .wp-block-button__link {
+		width: 100%;
+		padding: 1rem;
+		box-shadow: 0 18px 40px -12px rgba(0, 0, 0, 0.9);
+	}
+
+	.cc-mobile-call.is-hidden {
+		transform: translateY(160%);
+		opacity: 0;
+		visibility: hidden;
+		transition: transform 0.35s var(--cc-ease), opacity 0.35s ease, visibility 0s linear 0.35s;
+	}
+
+	.cc-footer {
+		padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+	}
+}
+
+/* ==========================================================================
+   18 Reduced motion, forced colours, print
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+
+	.cc-cursor {
+		display: none;
+	}
+}
+
+@media (hover: none), (pointer: coarse) {
+	.cc-cursor {
+		display: none;
+	}
+}
+
+@media (forced-colors: active) {
+	.cc-callslab,
+	.wp-block-button.is-style-call .wp-block-button__link {
+		border: 2px solid ButtonText;
+		clip-path: none;
+	}
+
+	.cc-hero__title em {
+		-webkit-text-fill-color: currentColor;
+		background: none;
+	}
+
+	body::after {
+		display: none;
+	}
+}
+
+@media print {
+	body::after,
+	.cc-site-header,
+	nav.cc-deck-index,
+	.cc-mobile-call,
+	.cc-marquee,
+	.cc-slide::after {
+		display: none !important;
+	}
+
+	body,
+	.cc-slide {
+		background: #fff !important;
+		color: #000 !important;
+	}
+
+	.cc-slide {
+		min-height: 0;
+		break-inside: avoid;
+	}
+}

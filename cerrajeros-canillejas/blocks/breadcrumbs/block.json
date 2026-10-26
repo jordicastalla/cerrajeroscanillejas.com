@@ -1,0 +1,20 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "cerrajeros-canillejas/breadcrumbs",
+	"title": "Migas de pan",
+	"category": "theme",
+	"icon": "arrow-right-alt2",
+	"description": "Ruta de navegación de la página actual (Inicio › Blog › Entrada). Coincide con los datos estructurados BreadcrumbList del tema.",
+	"keywords": [ "breadcrumbs", "migas", "ruta" ],
+	"textdomain": "cerrajeros-canillejas",
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ],
+		"spacing": { "margin": true, "padding": true },
+		"typography": { "fontSize": true },
+		"color": { "text": true, "link": true }
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

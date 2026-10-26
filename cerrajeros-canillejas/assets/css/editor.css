@@ -1,0 +1,60 @@
+/**
+ * Editor-only adjustments. theme.css is also loaded in the editor so the
+ * canvas matches the front end; these rules neutralise what only makes sense
+ * in a live page (fixed/sticky elements, viewport-height slides).
+ */
+
+.cc-site-header {
+	position: relative;
+	top: auto;
+}
+
+nav.cc-deck-index {
+	position: relative;
+	top: auto;
+	right: auto;
+	transform: none;
+	padding: 1rem var(--cc-gutter);
+	border-top: 1px dashed rgba(226, 228, 233, 0.24);
+}
+
+nav.cc-deck-index .wp-block-navigation-item__label {
+	opacity: 1;
+	transform: none;
+}
+
+.cc-mobile-call {
+	display: flex;
+	position: relative;
+	padding: 1rem var(--cc-gutter);
+	border-top: 1px dashed rgba(226, 228, 233, 0.24);
+}
+
+.cc-mobile-call::before {
+	content: "Botón fijo de llamada (solo móvil)";
+	display: block;
+	width: 100%;
+	margin-bottom: 0.5rem;
+	font-family: var(--cc-mono);
+	font-size: 0.6875rem;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: rgba(226, 228, 233, 0.62);
+}
+
+.cc-mobile-call {
+	flex-wrap: wrap;
+}
+
+.cc-slide {
+	min-height: 0;
+}
+
+.cc-marquee {
+	position: relative;
+	bottom: auto;
+}
+
+body::after {
+	display: none;
+}
