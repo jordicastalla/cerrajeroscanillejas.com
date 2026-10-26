@@ -5,6 +5,8 @@
  *
  * Only confirmed information belongs here. Do not add opening hours, postal
  * code, coordinates, prices or ratings unless the business confirms them.
+ * The service area and the everyday + urgent service were confirmed by the
+ * business; "urgent" does not mean 24-hour availability.
  *
  * @package CerrajerosCanillejas
  */
@@ -33,6 +35,7 @@ function business() {
 				'country'        => 'ES',
 				'country_name'   => 'España',
 				'landmark'       => 'junto a la oficina de Correos',
+				'areas'          => array( 'Canillejas', 'San Blas', 'Rosas', 'Hellín', 'El Salvador' ),
 			)
 		);
 	}

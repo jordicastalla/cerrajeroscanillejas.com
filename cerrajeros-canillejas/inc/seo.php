@@ -55,16 +55,25 @@ function schema_id( $fragment ) {
  * @return array
  */
 function schema_business() {
-	$logo = get_theme_file_uri( 'assets/images/logo-cerrajeros-canillejas.webp' );
+	$logo  = get_theme_file_uri( 'assets/images/logo-cerrajeros-canillejas.webp' );
+	$data  = business();
+	$areas = array();
 
-	return array(
+	foreach ( (array) ( isset( $data['areas'] ) ? $data['areas'] : array() ) as $area ) {
+		$areas[] = array(
+			'@type' => 'Place',
+			'name'  => $area . ', Madrid',
+		);
+	}
+
+	$node = array(
 		'@type'       => 'Locksmith',
 		'@id'         => schema_id( 'negocio' ),
 		'name'        => biz( 'name' ),
 		'url'         => home_url( '/' ),
 		'telephone'   => biz( 'phone_display' ),
 		'description' => sprintf(
-			'Cerrajería en %1$s, %2$s: cambio de cerradura y bombín, instalación de cerrojos de seguridad y reparación de cierres metálicos.',
+			'Cerrajería de diario y de urgencia en %1$s, %2$s: cambio de cerradura y bombín, instalación de cerrojos de seguridad y reparación de cierres metálicos.',
 			biz( 'locality' ),
 			biz( 'landmark' )
 		),
@@ -82,6 +91,12 @@ function schema_business() {
 		),
 		'image'       => $logo,
 	);
+
+	if ( $areas ) {
+		$node['areaServed'] = $areas;
+	}
+
+	return $node;
 }
 
 /**

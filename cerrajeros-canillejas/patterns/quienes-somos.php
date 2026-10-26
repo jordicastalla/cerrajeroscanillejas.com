@@ -3,9 +3,9 @@
  * Title: 05 · Quiénes Somos
  * Slug: cerrajeros-canillejas/quienes-somos
  * Categories: cerrajeros-canillejas
- * Keywords: quiénes somos, sobre nosotros, confianza, faq
+ * Keywords: quiénes somos, sobre nosotros, historia, confianza, faq
  * Viewport Width: 1440
- * Description: Diapositiva editorial sobre la cerrajería, sus principios de trabajo y las preguntas frecuentes.
+ * Description: Diapositiva editorial: la historia de Raúl y Jesús en Canillejas, cómo trabajan y las preguntas frecuentes.
  *
  * @package CerrajerosCanillejas
  */
@@ -29,14 +29,32 @@
 <figure class="wp-block-image size-full cc-about__seal"><img src="<?php echo esc_url( \CerrajerosCanillejas\image_url( 'sello-canillejas.svg' ) ); ?>" alt=""/></figure>
 <!-- /wp:image -->
 
-<!-- wp:group {"className":"cc-about__body","layout":{"type":"default"}} -->
-<div class="wp-block-group cc-about__body"><!-- wp:paragraph {"dropCap":true} -->
-<p class="has-drop-cap">Trabajamos con cerraduras, bombines, cerrojos de seguridad y cierres metálicos. Preferimos hablar claro: te escuchamos, revisamos el problema y te contamos qué proponemos antes de empezar.</p>
+<!-- wp:group {"className":"cc-about__story","layout":{"type":"default"}} -->
+<div class="wp-block-group cc-about__story"><!-- wp:heading {"level":3,"className":"cc-subhead"} -->
+<h3 class="wp-block-heading cc-subhead">Nuestra historia</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph {"dropCap":true} -->
+<p class="has-drop-cap">Aunque ahora Canillejas es uno de los barrios más seguros y tranquilos para vivir en Madrid, no siempre fue así. Nosotros nos criamos cuando fue uno de los puntos de la Ruta del Bakalao y de seguro no tenía nada.</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->
-<p>El teléfono es la forma más directa de hablar con nosotros. Explícanos qué ocurre y te orientaremos sobre los siguientes pasos.</p>
+<p>Posiblemente por eso mi hermano Raúl y yo, Jesús, ya hicimos nuestros primeros pinitos en el tema de los cerrojos de seguridad y más. También porque nuestro tío era cerrajero y tenía una ferretería en el barrio.</p>
 <!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"className":"cc-about__aside"} -->
+<p class="cc-about__aside">¡Nos parecía mágico lo de «clonar» una llave!</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>Ahora nos dedicamos a la seguridad y la cerrajería, tanto de diario como de urgencia, en nuestro barrio, Canillejas, y alrededores: San Blas, Rosas, Hellín o El Salvador.</p>
+<!-- /wp:paragraph --></div>
+<!-- /wp:group -->
+
+<!-- wp:group {"className":"cc-about__body","layout":{"type":"default"}} -->
+<div class="wp-block-group cc-about__body"><!-- wp:heading {"level":3,"className":"cc-subhead"} -->
+<h3 class="wp-block-heading cc-subhead">Cómo trabajamos</h3>
+<!-- /wp:heading -->
 
 <!-- wp:list {"ordered":true,"className":"is-style-index cc-principles"} -->
 <ol class="wp-block-list is-style-index cc-principles"><!-- wp:list-item -->

@@ -43,7 +43,7 @@ $cc_tel   = \CerrajerosCanillejas\phone_href();
 
 <!-- wp:details {"className":"is-style-faq-item"} -->
 <details class="wp-block-details is-style-faq-item"><summary>¿Dónde estáis?</summary><!-- wp:paragraph -->
-<p>En la Plaza del Párroco Luis Calleja, 13, en Canillejas (Madrid), junto a la oficina de Correos.</p>
+<p>En la Plaza del Párroco Luis Calleja, 13, en Canillejas (Madrid), junto a la oficina de Correos. Trabajamos en Canillejas y alrededores: San Blas, Rosas, Hellín y El Salvador.</p>
 <!-- /wp:paragraph --></details>
 <!-- /wp:details --></div>
 <!-- /wp:group -->

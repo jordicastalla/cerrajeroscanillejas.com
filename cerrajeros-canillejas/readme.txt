@@ -2,7 +2,7 @@
 Requires at least: 6.6
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -107,8 +107,10 @@ cerrajeros_canillejas_seo_plugin_active              (forzar la detección)
 cerrajeros_canillejas_business                       (datos del negocio)
 cerrajeros_canillejas_meta_description
 
-No se publican horarios, coordenadas, código postal, precios, valoraciones ni zona de
-servicio porque no están confirmados.
+No se publican horarios, coordenadas, código postal, precios ni valoraciones porque no
+están confirmados. Sí están confirmados por el negocio la zona de servicio (Canillejas,
+San Blas, Rosas, Hellín y El Salvador → areaServed) y el servicio de diario y de urgencia;
+«urgencia» no implica disponibilidad 24 horas, así que no se publica.
 
 == Blog y canibalización SEO ==
 
@@ -158,6 +160,11 @@ Logotipo e iconos: derivados del logotipo facilitado por el cliente.
 Diseño y desarrollo: Diània — https://www.diania.dev/
 
 == Changelog ==
+
+= 1.2.0 =
+* «Quiénes Somos»: la historia de Raúl y Jesús en dos columnas, con «Cómo trabajamos» y las preguntas frecuentes debajo.
+* Zona de servicio confirmada (Canillejas, San Blas, Rosas, Hellín, El Salvador): areaServed en el JSON-LD y en la FAQ.
+* Servicio de diario y de urgencia en la descripción del negocio (sin horario 24 h).
 
 = 1.1.0 =
 * Menú «Servicios» desplegable con enlaces a las secciones 02–04 de la portada.

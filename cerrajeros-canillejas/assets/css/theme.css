@@ -1460,9 +1460,45 @@ nav.cc-nav-primary .is-menu-open .cc-nav-call .wp-block-navigation-item__content
 	background: linear-gradient(transparent 92%, rgba(217, 83, 37, 0.45) 92%);
 }
 
+/* "Nuestra historia": magazine columns with a copper pull line in the flow. */
+.cc-about__story {
+	grid-column: 1 / span 9;
+	grid-row: 4;
+	padding-top: 1.5rem;
+	border-top: 1px solid var(--cc-line-strong);
+	columns: 2;
+	column-gap: clamp(1.5rem, 3vw, 3rem);
+	color: var(--cc-muted);
+}
+
+.cc-about__story > * {
+	margin: 0 0 1.15rem !important;
+	break-inside: avoid;
+}
+
+.cc-about__story > .cc-subhead {
+	column-span: all;
+	margin-bottom: 1.25rem !important;
+}
+
+.cc-about__story > :last-child {
+	margin-bottom: 0 !important;
+}
+
+.cc-about__aside {
+	padding-left: 1rem;
+	border-left: 2px solid var(--cc-copper);
+	font-family: var(--cc-display);
+	font-size: clamp(1.25rem, 0.95rem + 1vw, 1.85rem);
+	font-weight: 700;
+	line-height: 1.15;
+	letter-spacing: -0.01em;
+	color: var(--cc-copper);
+}
+
 .cc-about__body {
 	grid-column: 1 / span 5;
-	grid-row: 4;
+	grid-row: 5;
 	display: flex;
 	flex-direction: column;
 	gap: 1.25rem;
@@ -1477,7 +1513,7 @@ nav.cc-nav-primary .is-menu-open .cc-nav-call .wp-block-navigation-item__content
 
 .cc-about__faq {
 	grid-column: 7 / -1;
-	grid-row: 4;
+	grid-row: 5;
 	padding-top: 1.5rem;
 	border-top: 1px solid var(--cc-line-strong);
 }
@@ -1501,7 +1537,8 @@ nav.cc-nav-primary .is-menu-open .cc-nav-call .wp-block-navigation-item__content
 	margin-block: 0 !important;
 }
 
-.cc-faq__title {
+.cc-faq__title,
+.cc-subhead {
 	margin-bottom: 1rem !important;
 	font-family: var(--cc-mono);
 	font-size: 0.75rem;
@@ -2850,8 +2887,9 @@ nav.cc-nav-footer .wp-block-navigation-item__content:hover {
 	.cc-bolt__figure { grid-column: 7 / -1; }
 	.cc-bolt__sheet { grid-column: 1 / span 6; }
 
+	.cc-about__story { grid-column: 1 / -1; }
 	.cc-about__body { grid-column: 1 / -1; }
-	.cc-about__faq { grid-column: 1 / -1; grid-row: 5; }
+	.cc-about__faq { grid-column: 1 / -1; grid-row: 6; }
 
 	.cc-posts__head { grid-column: 1 / -1; position: static; }
 	.cc-latest { grid-column: 1 / -1; }
@@ -2965,6 +3003,10 @@ nav.cc-nav-footer .wp-block-navigation-item__content:hover {
 
 	.wp-block-list.is-style-bolts > li {
 		width: 100% !important;
+	}
+
+	.cc-about__story {
+		columns: 1;
 	}
 
 	.cc-about__seal {
