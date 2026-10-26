@@ -35,7 +35,7 @@
 <!-- /wp:heading -->
 
 <!-- wp:paragraph {"dropCap":true} -->
-<p class="has-drop-cap">Aunque ahora Canillejas es un barrio tranquilo, con alma de pueblo, no siempre fue así. Nosotros nos criamos cuando fue uno de los puntos de la Ruta del Bakalao y de seguro no tenía nada.</p>
+<p class="has-drop-cap">Aunque ahora Canillejas es un barrio tranquilo, con alma de pueblo, no siempre fue así. Nosotros nos criamos cuando el barrio era el inicio de la ruta madrileña del bakalao hacia Valencia —para los chavales de aquí, la primera parada era el Kea— y de seguro no tenía nada.</p>
 <!-- /wp:paragraph -->
 
 <!-- wp:paragraph -->

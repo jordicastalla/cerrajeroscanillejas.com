@@ -2,7 +2,7 @@
 Requires at least: 6.6
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 1.3.1
+Stable tag: 1.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -161,6 +161,9 @@ Logotipo e iconos: derivados del logotipo facilitado por el cliente.
 Diseño y desarrollo: Diània — https://www.diania.dev/
 
 == Changelog ==
+
+= 1.3.2 =
+* «Quiénes Somos»: el barrio como inicio de la ruta madrileña del bakalao hacia Valencia, con el Kea como primera parada.
 
 = 1.3.1 =
 * «Quiénes Somos»: «un barrio tranquilo, con alma de pueblo» en lugar de «uno de los barrios más seguros».
