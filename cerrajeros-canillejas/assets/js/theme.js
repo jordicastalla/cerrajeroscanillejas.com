@@ -197,8 +197,23 @@
 
 		var query = window.matchMedia( '(min-width: 900px) and (prefers-reduced-motion: no-preference)' );
 		var header = doc.querySelector( '.cc-site-header' );
-		var maxAngle = 22;
 		var flat = 0.04;
+		var maxAngle = 40;
+		var perspective = '950px';
+		var fade = 0.75;
+
+		// Intensity comes from CSS custom properties on :root (theme.css), so
+		// it can be tuned without touching this file.
+		function readSettings() {
+			var css = window.getComputedStyle( root );
+			var angle = parseFloat( css.getPropertyValue( '--cc-drum-angle' ) );
+			var depth = css.getPropertyValue( '--cc-drum-perspective' ).trim();
+			var dim = parseFloat( css.getPropertyValue( '--cc-drum-fade' ) );
+
+			maxAngle = isFinite( angle ) ? Math.max( 0, Math.min( 80, angle ) ) : maxAngle;
+			perspective = depth || perspective;
+			fade = isFinite( dim ) ? Math.max( 0, Math.min( 1, dim ) ) : fade;
+		}
 		var pending = false;
 		var enabled = false;
 
@@ -214,8 +229,16 @@
 			var viewport = window.innerHeight || root.clientHeight;
 			var line = header ? Math.max( 0, header.getBoundingClientRect().bottom ) : 0;
 			var span = Math.max( 1, viewport - line );
+			// Layout positions (offsetTop/offsetHeight) ignore the transform this
+			// function applies, so the rotation never feeds back into itself.
+			var scrolled = window.pageYOffset || root.scrollTop || 0;
 			var rects = slides.map( function ( slide ) {
-				return slide.getBoundingClientRect();
+				var top = 0;
+				for ( var node = slide; node; node = node.offsetParent ) {
+					top += node.offsetTop;
+				}
+				top -= scrolled;
+				return { top: top, bottom: top + slide.offsetHeight };
 			} );
 
 			slides.forEach( function ( slide, index ) {
@@ -242,8 +265,8 @@
 
 				size = ( size - flat ) / ( 1 - flat );
 				slide.style.transformOrigin = origin;
-				slide.style.transform = 'perspective(1400px) rotateX(' + ( ( amount < 0 ? -1 : 1 ) * size * maxAngle ).toFixed( 2 ) + 'deg)';
-				slide.style.opacity = ( 1 - 0.65 * size ).toFixed( 3 );
+				slide.style.transform = 'perspective(' + perspective + ') rotateX(' + ( ( amount < 0 ? -1 : 1 ) * size * maxAngle ).toFixed( 2 ) + 'deg)';
+				slide.style.opacity = ( 1 - fade * size ).toFixed( 3 );
 			} );
 		}
 
@@ -257,6 +280,7 @@
 		function toggle() {
 			if ( query.matches && ! enabled ) {
 				enabled = true;
+				readSettings();
 				root.classList.add( 'cc-drum' );
 				window.addEventListener( 'scroll', request, { passive: true } );
 				window.addEventListener( 'resize', request, { passive: true } );

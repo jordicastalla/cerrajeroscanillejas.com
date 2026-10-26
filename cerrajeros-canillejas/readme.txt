@@ -2,7 +2,7 @@
 Requires at least: 6.6
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 1.3.2
+Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,7 +32,12 @@ Efecto «rodar cilindro»: en pantallas de 900 px de ancho o más, al pasar de u
 diapositiva a otra las secciones giran como las caras de un tambor. Lo calcula
 assets/js/theme.js a partir de la posición del scroll (no intercepta la rueda, el
 teclado ni el tacto) con APIs estándar que también tienen Firefox y Safari (probado
-en Chromium). Una diapositiva en reposo queda plana. No se aplica en móvil, en el editor ni si el
+en Chromium). Una diapositiva en reposo queda plana. La intensidad se ajusta en assets/css/theme.css
+(o en «CSS adicional» del Editor del sitio, dentro de :root):
+  --cc-drum-angle: 40;            grados de giro máximo (0 lo desactiva visualmente)
+  --cc-drum-perspective: 950px;   menos = más profundidad
+  --cc-drum-fade: 0.75;           cuánto se oscurece la cara que gira (0–1)
+No se aplica en móvil, en el editor ni si el
 sistema tiene activado «reducir movimiento» / «mostrar animaciones: no» (en ese
 caso las secciones se desplazan de forma normal).
 
@@ -161,6 +166,12 @@ Logotipo e iconos: derivados del logotipo facilitado por el cliente.
 Diseño y desarrollo: Diània — https://www.diania.dev/
 
 == Changelog ==
+
+= 1.4.0 =
+* «Rodar cilindro» más marcado (40°, perspectiva 950px, más oscurecimiento) y ajustable con
+  --cc-drum-angle, --cc-drum-perspective y --cc-drum-fade.
+* Corrección: el cálculo usa la posición de maquetación, así que el giro ya no se realimenta
+  y las diapositivas en reposo quedan exactamente planas.
 
 = 1.3.2 =
 * «Quiénes Somos»: el barrio como inicio de la ruta madrileña del bakalao hacia Valencia, con el Kea como primera parada.
